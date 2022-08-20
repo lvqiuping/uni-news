@@ -1,0 +1,366 @@
+<template>
+	<view class="page-container">
+		<!-- <u-skeleton rows="15" :loading="loading" :title="false"> -->
+		<view class="title-info">
+			<view class="t-title over_two_lines">{{data.title}}</view>
+			<view class="t-tips">
+				<text class="t-user">东莞本地宝</text><text>{{data.create_time}}</text><text></text>
+			</view>
+		</view>
+		<view class="content-info">
+			<!-- <view class="c-title">东莞新病毒最新报告</view> -->
+			<!-- <view class="text_indent_two" style="margin-bottom: 20rpx;">来源：今日头条</view>
+			<view class="text_indent_two">来源：今日头条</view> -->
+			<view class="text_indent_two c-content">
+				<!-- {{data.content}} -->
+				<u-parse :content="data.content"></u-parse>
+			</view>
+			<view class="c-bottom">
+				<view class="grid-list" v-for="(item,index) in grid">
+					<view class="grid-title">
+						<view class="grid-title-text">
+							{{item.name}}
+						</view>
+					</view>
+					<view class="grid-item" @click="gridClick(data.value)" v-for="(data,dindex) in item.data"
+						:key="dindex">
+						<view class="grid-icon">
+							<u-icon color="#333" size="22" :name="data.icon"></u-icon>
+						</view>
+						<view class="grid-text">
+							{{data.name}}
+						</view>
+					</view>
+				</view>
+				<view class="c-count">阅读{{data.read_count}}</view>
+			</view>
+		</view>
+		<view class="footer-info">
+			<view class="f-title">
+				<text>精选留言</text>
+				<text @click="this.addComment = true">写留言</text>
+			</view>
+			<view class="f-list">
+				<view v-for="(item, index) in list" style="display: flex; justify-content: space-between">
+					<view>{{item.content}}</view>
+					<view @click="support(item.id)">点赞：{{item.support}}</view>
+				</view>
+			</view>
+		</view>
+
+		<view style="height: 20rpx;"></view>
+		<!-- </u-skeleton> -->
+		<!-- 弹框 -->
+		<u-popup :show="show" mode="bottom" @close="close" @open="open">
+			<view class="u-po">
+				<view class="u-po-title">东莞本地宝
+					<u-icon name="arrow-right" color="#333333" size="20" style="margin-left: 20rpx;" />
+				</view>
+				<view class="c-bottom">
+					<view class="grid-list" v-for="(item,index) in grid">
+						<view class="grid-title">
+							<view class="grid-title-text">
+								{{item.name}}
+							</view>
+						</view>
+						<view class="grid-item" @click="gridClick(data.value)" v-for="(data,dindex) in item.data"
+							:key="dindex">
+							<view class="grid-icon" :class="data.bg">
+								<u-icon color="#333" size="22" :name="data.icon"></u-icon>
+							</view>
+							<view class="grid-text">
+								{{data.name}}
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</u-popup>
+		<u-popup :show="addComment" mode="bottom" @close="close" @open="open">
+			<u--form labelPosition="left" :model="comment" ref="form1">
+				<u-form-item prop="content" borderBottom>
+					<u--textarea v-model="comment.content" placeholder="请输入内容"></u--textarea>
+				</u-form-item>
+			</u--form>
+			<view style="margin: 60rpx 30rpx; display: flex;">
+				<u-button icon="lock-open" size="mini" shape="circle" @click="cancel" type="info" text="取消">
+				</u-button>
+				<u-button icon="lock-open" size="mini" shape="circle" @click="submit" type="primary" text="确定">
+				</u-button>
+			</view>
+		</u-popup>
+	</view>
+</template>
+
+<script>
+    import uParse from '@/uni_modules/uview-ui/components/u-parse/u-parse.vue'
+	// import messagelist from '@/components/vol-list/message-list.vue'
+	export default {
+		components: {
+			'u-parse': uParse
+			// 'message-list': messagelist
+		},
+		data() {
+			return {
+				show: false,
+				addComment: false,
+				loading: true,
+				data: {},
+				userInfo: {},
+				grid: [{
+					data: [{
+						name: "分享",
+						icon: "share",
+						value: "share"
+					}, {
+						name: "收藏",
+						icon: "star",
+						value: "collect"
+					}, {
+						name: "点赞",
+						icon: "thumb-up",
+						value: "support"
+					}]
+				}],
+				list: [],
+				id: 0,
+				page: 0,
+
+				comment: {
+					content: '',
+				},
+
+			}
+		},
+
+
+		onLoad(option) {
+			var that = this;
+			uni.setNavigationBarTitle({
+				title: option.title
+			})
+			that.userInfo.id = option.id
+		},
+		onShow() {
+			var that = this;
+			that.userInfo.openid = that.$store.state.userInfo.openid
+			let params = {
+				id: that.userInfo.id,
+				openid: that.userInfo.openid
+			}
+			that.http.get("/News/read", params, false).then(result => {
+					that.data = result.data;
+					that.loading = false;
+				}),
+			that.getList();
+			that.gridClick('read_count'); // 进入页面就加一次阅读量
+		},
+		methods: {
+			open() {
+				// console.log('open');
+			},
+			close() {
+				this.show = false
+				this.addComment = false
+				// console.log('close');
+			},
+			support(id){
+				var that = this
+				let params = {openid: that.userInfo.openid, id: id}
+				that.http.get("/NewsComments/setInc", params, false).then(result => {
+					console.log("点赞", result)
+					that.getList()
+				})
+			},
+			gridClick(p) {
+				var that = this;
+				let params = {}
+					if(p === 'share'){
+						params = {id: that.userInfo.id, openid: that.userInfo.openid, share: 1}
+						// if (p === 'share') {
+						// 	console.log(p)
+						// 	this.show = true
+						// }
+					}else if(p === 'collect'){
+						params = {id: that.userInfo.id, openid: that.userInfo.openid, collect: 1}
+					}else if(p === 'support'){
+						params = {id: that.userInfo.id, openid: that.userInfo.openid, support: 1}
+					}else if(p === 'read_count'){
+						params = {id: that.userInfo.id, openid: that.userInfo.openid, read_count: 1}
+					}
+				
+				console.log('params8888', params)
+				that.http.get("/News/setInc", params, false).then(result => {
+					console.log("更新", result)
+				})
+			},
+			getList() {
+				var that = this;
+				let params = {
+					openid: that.userInfo.openid,
+					news_id: that.userInfo.id
+				}
+				that.http.get("/NewsComments/index", params, false).then(result => {
+					that.list = result.data;
+					that.loading = false;
+				})
+			},
+			submit() {
+				var that = this
+				let params = {
+					openid: that.userInfo.openid,
+					news_id: that.userInfo.id,
+					content: that.comment.content
+				}
+				that.http.post("/NewsComments/save", params, true).then(res => {
+					that.addComment = false
+					that.getList()
+				});
+			}
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	
+	    // @import url("@/uni_modules/uview-ui/components/u-parse/u-parse.css");
+	    // /deep/ .wxParse{
+	    //     margin: 10px auto;
+	    //     width: 90vw;
+	    //     padding: 20px 10px;
+	    //     box-sizing: border-box;
+	    //     border-radius: 10px;
+	    //     border: 1px solid #E0E0E0;
+	    //     box-shadow:2px 2px 10px #7d7d7d;
+	    // }
+	    // /deep/ .first{
+	    //     text-align: center;
+	    //     padding-bottom: 5px;
+	    //     border-bottom: 1px solid #E0E0E0;
+	    // }
+
+	.text_indent_two {
+		text-indent: 20rpx;
+	}
+
+	.over_two_lines {
+		display: -webkit-box;
+		word-break: break-all;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: pre-line;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+
+	.page-container {
+		margin: 20rpx 40rpx;
+		height: calc(100vh - 110rpx);
+		overflow: scroll;
+		color: #333333;
+
+		.title-info {
+			font-size: 60rpx;
+
+			.t-title {
+				text-align: center;
+				margin-bottom: 40rpx;
+			}
+
+			.t-tips {
+				font-size: 30rpx;
+				color: #999999;
+				display: flex;
+				justify-content: space-between;
+
+				.t-user {
+					color: #FC5C5B;
+				}
+			}
+		}
+
+
+		.content-info {
+			background-color: #E1EFFE;
+			margin: 27rpx 0;
+
+			.c-title {
+				color: #333333;
+				font-size: 40rpx;
+				text-align: center;
+				padding: 30rpx 0 20rpx;
+			}
+			.c-content {
+				padding: 24rpx;
+			}
+
+		}
+
+		.c-bottom {
+			display: flex;
+			padding: 20rpx 0;
+
+			.grid-list {
+				width: 75%;
+				display: inline-block;
+
+				.grid-item {
+					width: 20%;
+					text-align: center;
+					float: left;
+				}
+
+				.grid-icon {
+					width: 80rpx;
+					height: 80rpx;
+					position: relative;
+					left: 0;
+					right: 0;
+					margin: auto;
+				}
+
+				.grid-text {
+					font-size: 24rpx;
+					color: #7e7e7e;
+				}
+			}
+
+			.c-count {
+				align-self: end;
+			}
+		}
+
+		.footer-info {
+			.f-title {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.f-list {
+				color: #999999;
+				margin: 20rpx 0;
+			}
+
+		}
+
+		.u-po {
+			height: 300rpx;
+
+			.u-po-title {
+				display: flex;
+				font-size: 50rpx;
+				color: #333333;
+				margin: 20rpx 40rpx;
+			}
+		}
+	}
+</style>
+<style scoped>
+	.grid-list /deep/ .u-icon {
+		flex-direction: column !important;
+		position: absolute;
+		top: 48%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+</style>
