@@ -12,8 +12,8 @@
 			<!-- <view class="text_indent_two" style="margin-bottom: 20rpx;">来源：今日头条</view>
 			<view class="text_indent_two">来源：今日头条</view> -->
 			<view class="text_indent_two c-content">
-				<!-- {{data.content}} -->
-				<u-parse :content="data.content"></u-parse>
+				<view v-text="data.content"></view>
+				<u-parse :content="data.content" ></u-parse>
 			</view>
 			<view class="c-bottom">
 				<view class="grid-list" v-for="(item,index) in grid">
