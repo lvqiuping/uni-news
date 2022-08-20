@@ -13,10 +13,10 @@
 			<view class="text_indent_two">来源：今日头条</view> -->
 			<view class="text_indent_two c-content">
 				<!-- {{data.content}} -->
-				<u-parse :content="data.content"></u-parse>
+				<view v-html="unescapeEntity(data.content)"></view>
 			</view>
 			<view class="c-bottom">
-				<view class="grid-list" v-for="(item,index) in grid">
+				<view class="grid-list" v-for="(item,index) in grid" :key="index">
 					<view class="grid-title">
 						<view class="grid-title-text">
 							{{item.name}}
@@ -216,7 +216,49 @@
 					that.addComment = false
 					that.getList()
 				});
-			}
+			},
+			unescapeEntity(str) {
+			        var reg = /&(?:nbsp|#160|lt|#60|gt|62|amp|#38|quot|#34|cent|#162|pound|#163|yen|#165|euro|#8364|sect|#167|copy|#169|reg|#174|trade|#8482|times|#215|divide|#247);/g,
+			            entity = {
+			            '&nbsp;'   : ' ',
+			            ' '   : ' ',
+			            '&lt;'     : '<',
+			            '<'    : '<',
+			            '&gt;'     : '>',
+			            '&62;'     : '>',
+			            '&amp;'    : '&',
+			            '&'    : '&',
+			            '&quot;'   : '"',
+			            '"'    : '"',
+			            '&cent;'   : '￠',
+			            '¢'   : '￠',
+			            '&pound;'  : '£',
+			            '£'   : '£',
+			            '&yen;'    : '¥',
+			            '¥'   : '¥',
+			            '&euro;'   : '€',
+			            '€'  : '€',
+			            '&sect;'   : '§',
+			            '§'   : '§',
+			            '&copy;'   : '©',
+			            '©'   : '©',
+			            '&reg;'    : '®',
+			            '®'   : '®',
+			            '&trade;'  : '™',
+			            '™'  : '™',
+			            '&times;'  : '×',
+			            '×'   : '×',
+			            '&divide;' : '÷',
+			            '÷'   : '÷'
+			        };
+			        if (str === null) {
+			            return '';
+			        }
+			        str = str.toString();
+			        return str.indexOf(';') < 0 ? str : str.replace(reg, function(chars) {
+			            return entity[chars];
+			        });
+			    }
 		}
 	}
 </script>
