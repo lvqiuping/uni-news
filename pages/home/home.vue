@@ -1,14 +1,10 @@
 <template>
 	<view :style="{height:height+50+'px'}">
 			<view class="user-info">
-				<u-row>
-					<u-col :span="6">
 						<view class="u-left">
 							<image class="u-img" :src="userInfo.img"></image>
 							<view class="u-title">{{userInfo.userName}}</view>
 						</view>
-					</u-col>
-					<u-col :span="6">
 						<view class="u-right">
 							<u--input 
 							v-model="searchWord" 
@@ -17,10 +13,9 @@
 							suffixIcon="search" 
 							suffixIconStyle="color: #909399" shape="circle"
 							border
+							@click="search"
 							 />
 						</view>
-					</u-col>
-				</u-row>
 			</view>
 			<view class="tabs-info">
 				<view class="t-title">
@@ -47,6 +42,8 @@
 			</view>
 			<view style="height: 115rpx;"></view>
 			<vol-tabbar :index="0"></vol-tabbar>
+			<!-- 弹框 -->
+			<u-notify message="请输入关键词" :show="showSearch"></u-notify>
 		</view>
 </template>
 
@@ -58,6 +55,7 @@
 		},
 		data() {
 			return {
+				showSearch: false,
 				tabsTitle: [],
 				list: [],
 				height: 0,
@@ -90,6 +88,9 @@
 			that.getList(that.cid0)
 		},
 		methods: {
+			search(){
+				this.showSearch = true
+			},
 			getNav(){
 				var that = this;
 				let params = { openid: that.userInfo.openid }
@@ -120,6 +121,8 @@
 <style lang="less" scoped>
 		.user-info {
 			margin: 40rpx 20rpx 20rpx;
+			display: flex;
+			justify-content: space-between;
 
 			.u-left {
 				display: flex;

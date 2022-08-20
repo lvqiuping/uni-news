@@ -6,6 +6,7 @@ import uView from '@/uni_modules/uview-ui'
 import common from './util/common.js'
 import http from './util/http.js'
 import store from './store'
+
 Vue.prototype.$toast = function(message,duration) {
 	uni.showToast({
 		icon: "none",
@@ -16,6 +17,7 @@ Vue.prototype.$toast = function(message,duration) {
 
 Vue.prototype.http=http;
 Vue.prototype.$store = store;
+// Vue.mixin(share)
 Vue.use(uView)
 Vue.config.productionTip = false;
 Vue.prototype.base=common;
