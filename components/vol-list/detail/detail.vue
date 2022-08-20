@@ -1,38 +1,29 @@
 <template>
 	<view class="page-container">
-		<!-- <u-skeleton rows="15" :loading="loading" :title="false"> -->
 		<view class="title-info">
 			<view class="t-title over_two_lines">{{data.title}}</view>
 			<view class="t-tips">
-				<text class="t-user">东莞本地宝</text><text>{{data.create_time}}</text><text></text>
+				<text class="t-user">东莞本地宝</text>
+				<text>{{data.create_time}}</text>
 			</view>
 		</view>
 		<view class="content-info">
-			<!-- <view class="c-title">东莞新病毒最新报告</view> -->
-			<!-- <view class="text_indent_two" style="margin-bottom: 20rpx;">来源：今日头条</view>
-			<view class="text_indent_two">来源：今日头条</view> -->
 			<view class="text_indent_two c-content">
-				<!-- {{data.content}} -->
 				<view v-html="unescapeEntity(data.content)"></view>
 			</view>
 			<view class="c-bottom">
-				<view class="grid-list" v-for="(item,index) in grid" :key="index">
-					<view class="grid-title">
-						<view class="grid-title-text">
+				<view class="grid-list">
+					<view class="grid-item" @click="gridClick(item)" v-for="(item,index) in iconList"
+						:key="index">
+						<view class="grid-icon">
+							<u-icon :color="item.color" size="22" :name="item.icon"></u-icon>
+						</view>
+						<view class="grid-text">
 							{{item.name}}
 						</view>
 					</view>
-					<view class="grid-item" @click="gridClick(data.value)" v-for="(data,dindex) in item.data"
-						:key="dindex">
-						<view class="grid-icon">
-							<u-icon color="#333" size="22" :name="data.icon"></u-icon>
-						</view>
-						<view class="grid-text">
-							{{data.name}}
-						</view>
-					</view>
 				</view>
-				<view class="c-count">阅读{{data.read_count}}</view>
+				<view class="c-count">阅读 <text>{{data.read_count}}</text></view>
 			</view>
 		</view>
 		<view class="footer-info">
@@ -43,13 +34,12 @@
 			<view class="f-list">
 				<view v-for="(item, index) in list" style="display: flex; justify-content: space-between">
 					<view>{{item.content}}</view>
-					<view @click="support(item.id)">点赞：{{item.support}}</view>
+					<view style="display: flex;" @click="support(item.id)" ><u-icon color="#dd6161" size="22" name="thumb-up" />{{item.support}}</view>
 				</view>
 			</view>
 		</view>
 
 		<view style="height: 20rpx;"></view>
-		<!-- </u-skeleton> -->
 		<!-- 弹框 -->
 		<u-popup :show="show" mode="bottom" @close="close" @open="open">
 			<view class="u-po">
@@ -93,39 +83,36 @@
 </template>
 
 <script>
-    import uParse from '@/uni_modules/uview-ui/components/u-parse/u-parse.vue'
-	// import messagelist from '@/components/vol-list/message-list.vue'
 	export default {
 		components: {
-			'u-parse': uParse
-			// 'message-list': messagelist
 		},
 		data() {
 			return {
 				show: false,
 				addComment: false,
 				loading: true,
+				collect: false,
 				data: {},
 				userInfo: {},
-				grid: [{
-					data: [{
+					iconList: [{
 						name: "分享",
 						icon: "share",
-						value: "share"
+						value: "share",
+						color: "#333"
 					}, {
 						name: "收藏",
 						icon: "star",
-						value: "collect"
+						value: "collect",
+						color: "#333"
 					}, {
 						name: "点赞",
 						icon: "thumb-up",
-						value: "support"
-					}]
-				}],
+						value: "support",
+						color: "#333"
+					}],
 				list: [],
 				id: 0,
 				page: 0,
-
 				comment: {
 					content: '',
 				},
@@ -157,12 +144,10 @@
 		},
 		methods: {
 			open() {
-				// console.log('open');
 			},
 			close() {
 				this.show = false
 				this.addComment = false
-				// console.log('close');
 			},
 			support(id){
 				var that = this
@@ -174,22 +159,40 @@
 			},
 			gridClick(p) {
 				var that = this;
+				// var dianji = false;
 				let params = {}
-					if(p === 'share'){
+					if(p.value === 'share'){
 						params = {id: that.userInfo.id, openid: that.userInfo.openid, share: 1}
-						// if (p === 'share') {
-						// 	console.log(p)
-						// 	this.show = true
-						// }
-					}else if(p === 'collect'){
+					}else if(p.value === 'collect'){
+					// if(!dianji){
+					// 	that.dianji = true
+					// 	that.iconList = Object.assign([], that.iconList, [{
+					// 		name: "分享",
+					// 		icon: "share",
+					// 		value: "share",
+					// 		color: "#333"
+					// 	},{name: "收藏",
+					// 		icon: "star",
+					// 		value: "collect",
+					// 		color: "#dd6161"},
+					// 		{
+					// 			name: "点赞",
+					// 			icon: "thumb-up",
+					// 			value: "support",
+					// 			color: "#333"
+					// 		}
+					// 		])
+					// }
 						params = {id: that.userInfo.id, openid: that.userInfo.openid, collect: 1}
-					}else if(p === 'support'){
+					}else if(p.value === 'support'){
+						
 						params = {id: that.userInfo.id, openid: that.userInfo.openid, support: 1}
-					}else if(p === 'read_count'){
+					}else if(p.value === 'read_count'){
 						params = {id: that.userInfo.id, openid: that.userInfo.openid, read_count: 1}
 					}
 				
 				console.log('params8888', params)
+				return
 				that.http.get("/News/setInc", params, false).then(result => {
 					console.log("更新", result)
 				})
@@ -264,23 +267,6 @@
 </script>
 
 <style lang="less" scoped>
-	
-	    // @import url("@/uni_modules/uview-ui/components/u-parse/u-parse.css");
-	    // /deep/ .wxParse{
-	    //     margin: 10px auto;
-	    //     width: 90vw;
-	    //     padding: 20px 10px;
-	    //     box-sizing: border-box;
-	    //     border-radius: 10px;
-	    //     border: 1px solid #E0E0E0;
-	    //     box-shadow:2px 2px 10px #7d7d7d;
-	    // }
-	    // /deep/ .first{
-	    //     text-align: center;
-	    //     padding-bottom: 5px;
-	    //     border-bottom: 1px solid #E0E0E0;
-	    // }
-
 	.text_indent_two {
 		text-indent: 20rpx;
 	}
@@ -340,25 +326,23 @@
 
 		.c-bottom {
 			display: flex;
-			padding: 20rpx 0;
+			padding: 20rpx;
+			justify-content: space-between;
+			
 
 			.grid-list {
 				width: 75%;
 				display: inline-block;
 
 				.grid-item {
-					width: 20%;
+					margin-right: 20rpx;
 					text-align: center;
 					float: left;
 				}
 
 				.grid-icon {
-					width: 80rpx;
 					height: 80rpx;
 					position: relative;
-					left: 0;
-					right: 0;
-					margin: auto;
 				}
 
 				.grid-text {
@@ -368,7 +352,9 @@
 			}
 
 			.c-count {
-				align-self: end;
+				display: flex;
+				flex-direction: cloumn;
+				align-items: flex-end;
 			}
 		}
 
