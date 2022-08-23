@@ -20,10 +20,8 @@
 					content: '是否授权',
 					success: (res) => {
 						if (res.confirm) {
-							console.log('用户点击确定');
 							this.wechatLogin()
 						} else if (res.cancel) {
-							console.log('用户点击取消');
 						}
 
 					},
@@ -59,8 +57,8 @@
 												return that.$toast(result.msg);
 											}
 											that.$toast("登录成功,正在跳转!");
-											that.$store.commit("setUserInfo", result.data); //存用户信息
 											console.log(result)
+											uni.setStorageSync('userInfo', result.data)
 											uni.switchTab({
 												url: "/pages/home/home"
 											})
