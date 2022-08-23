@@ -13,8 +13,7 @@
 			</view>
 			<view class="c-bottom">
 				<view class="grid-list">
-					<view class="grid-item" @click="gridClick(item)" v-for="(item,index) in iconList"
-						:key="index">
+					<view class="grid-item" @click="gridClick(item)" v-for="(item,index) in iconList" :key="index">
 						<view class="grid-icon">
 							<u-icon :color="item.color" size="22" :name="item.icon"></u-icon>
 						</view>
@@ -29,12 +28,14 @@
 		<view class="footer-info">
 			<view class="f-title">
 				<text>精选留言</text>
-				<text @click="this.addComment = true">写留言</text>
+				<view @click="getComment">写留言</view>
 			</view>
 			<view class="f-list">
 				<view v-for="(item, index) in list" style="display: flex; justify-content: space-between">
 					<view>{{item.content}}</view>
-					<view style="display: flex;" @click="support(item.id)" ><u-icon color="#dd6161" size="22" name="thumb-up" />{{item.support}}</view>
+					<view style="display: flex;" @click="support(item.id)">
+						<u-icon color="#dd6161" size="22" name="thumb-up" />{{item.support}}
+					</view>
 				</view>
 			</view>
 		</view>
@@ -84,8 +85,6 @@
 
 <script>
 	export default {
-		components: {
-		},
 		data() {
 			return {
 				show: false,
@@ -94,22 +93,22 @@
 				collect: false,
 				data: {},
 				userInfo: {},
-					iconList: [{
-						name: "分享",
-						icon: "share",
-						value: "share",
-						color: "#333"
-					}, {
-						name: "收藏",
-						icon: "star",
-						value: "collect",
-						color: "#333"
-					}, {
-						name: "点赞",
-						icon: "thumb-up",
-						value: "support",
-						color: "#333"
-					}],
+				iconList: [{
+					name: "分享",
+					icon: "share",
+					value: "share",
+					color: "#333"
+				}, {
+					name: "收藏",
+					icon: "star",
+					value: "collect",
+					color: "#333"
+				}, {
+					name: "点赞",
+					icon: "thumb-up",
+					value: "support",
+					color: "#333"
+				}],
 				list: [],
 				id: 0,
 				page: 0,
@@ -139,19 +138,27 @@
 					that.data = result.data;
 					that.loading = false;
 				}),
-			that.getList();
+				that.getList();
 			that.gridClick('read_count'); // 进入页面就加一次阅读量
 		},
 		methods: {
-			open() {
+			getComment() {
+				this.addComment = true
 			},
+			open() {
+				// console.log('open');
+			},
+
 			close() {
 				this.show = false
 				this.addComment = false
 			},
-			support(id){
+			support(id) {
 				var that = this
-				let params = {openid: that.userInfo.openid, id: id}
+				let params = {
+					openid: that.userInfo.openid,
+					id: id
+				}
 				that.http.get("/NewsComments/setInc", params, false).then(result => {
 					console.log("点赞", result)
 					that.getList()
@@ -159,38 +166,52 @@
 			},
 			gridClick(p) {
 				var that = this;
-				// var dianji = false;
 				let params = {}
-					if(p.value === 'share'){
-						params = {id: that.userInfo.id, openid: that.userInfo.openid, share: 1}
-					}else if(p.value === 'collect'){
-					// if(!dianji){
-					// 	that.dianji = true
-					// 	that.iconList = Object.assign([], that.iconList, [{
-					// 		name: "分享",
-					// 		icon: "share",
-					// 		value: "share",
-					// 		color: "#333"
-					// 	},{name: "收藏",
-					// 		icon: "star",
-					// 		value: "collect",
-					// 		color: "#dd6161"},
-					// 		{
-					// 			name: "点赞",
-					// 			icon: "thumb-up",
-					// 			value: "support",
-					// 			color: "#333"
+				if (p.value === 'share') {
+					// 	// params = {id: that.userInfo.id, openid: that.userInfo.openid, share: 1}
+					// 	// let routes = getCurrentPages();
+					// 	// let curRoute = routes[routes.length - 1].$page.fullPath
+					// 	uni.share({
+					// 		provider: "weixin",
+					// 		scene: 'WXSceneSession', //分享场景
+					// 		type: '1',
+					// 		href: '',
+					// 		title: '率秋萍',
+					// 		summary: '888',
+					// 		imageUrl: '',
+					// 		success:function(res) {
+					// 			that.posters = false
+					// 		},
+					// 		fail: function(err) {
+					// 			uni.showToast({
+					// 				title: '分享失败',
+					// 				icon: 'none',
+					// 				duration:2000
+					// 			})
+					// 			that.posters = false
 					// 		}
-					// 		])
-					// }
-						params = {id: that.userInfo.id, openid: that.userInfo.openid, collect: 1}
-					}else if(p.value === 'support'){
-						
-						params = {id: that.userInfo.id, openid: that.userInfo.openid, support: 1}
-					}else if(p.value === 'read_count'){
-						params = {id: that.userInfo.id, openid: that.userInfo.openid, read_count: 1}
+					// 	})
+				} else if (p.value === 'collect') {
+					params = {
+						id: that.userInfo.id,
+						openid: that.userInfo.openid,
+						collect: 1
 					}
-				
+				} else if (p.value === 'support') {
+
+					params = {
+						id: that.userInfo.id,
+						openid: that.userInfo.openid,
+						support: 1
+					}
+				} else if (p.value === 'read_count') {
+					params = {
+						id: that.userInfo.id,
+						openid: that.userInfo.openid,
+						read_count: 1
+					}
+				}
+
 				console.log('params8888', params)
 				return
 				that.http.get("/News/setInc", params, false).then(result => {
@@ -215,53 +236,54 @@
 					news_id: that.userInfo.id,
 					content: that.comment.content
 				}
-				that.http.post("/NewsComments/save", params, true).then(res => {
+				that.http.post("/NewsComments/save", params, false).then(res => {
 					that.addComment = false
 					that.getList()
 				});
 			},
 			unescapeEntity(str) {
-			        var reg = /&(?:nbsp|#160|lt|#60|gt|62|amp|#38|quot|#34|cent|#162|pound|#163|yen|#165|euro|#8364|sect|#167|copy|#169|reg|#174|trade|#8482|times|#215|divide|#247);/g,
-			            entity = {
-			            '&nbsp;'   : ' ',
-			            ' '   : ' ',
-			            '&lt;'     : '<',
-			            '<'    : '<',
-			            '&gt;'     : '>',
-			            '&62;'     : '>',
-			            '&amp;'    : '&',
-			            '&'    : '&',
-			            '&quot;'   : '"',
-			            '"'    : '"',
-			            '&cent;'   : '￠',
-			            '¢'   : '￠',
-			            '&pound;'  : '£',
-			            '£'   : '£',
-			            '&yen;'    : '¥',
-			            '¥'   : '¥',
-			            '&euro;'   : '€',
-			            '€'  : '€',
-			            '&sect;'   : '§',
-			            '§'   : '§',
-			            '&copy;'   : '©',
-			            '©'   : '©',
-			            '&reg;'    : '®',
-			            '®'   : '®',
-			            '&trade;'  : '™',
-			            '™'  : '™',
-			            '&times;'  : '×',
-			            '×'   : '×',
-			            '&divide;' : '÷',
-			            '÷'   : '÷'
-			        };
-			        if (str === null) {
-			            return '';
-			        }
-			        str = str.toString();
-			        return str.indexOf(';') < 0 ? str : str.replace(reg, function(chars) {
-			            return entity[chars];
-			        });
-			    }
+				var reg =
+					/&(?:nbsp|#160|lt|#60|gt|62|amp|#38|quot|#34|cent|#162|pound|#163|yen|#165|euro|#8364|sect|#167|copy|#169|reg|#174|trade|#8482|times|#215|divide|#247);/g,
+					entity = {
+						'&nbsp;': ' ',
+						' ': ' ',
+						'&lt;': '<',
+						'<': '<',
+						'&gt;': '>',
+						'&62;': '>',
+						'&amp;': '&',
+						'&': '&',
+						'&quot;': '"',
+						'"': '"',
+						'&cent;': '￠',
+						'¢': '￠',
+						'&pound;': '£',
+			  	'£': '£',
+						'&yen;': '¥',
+			 		'¥': '¥',
+						'&euro;': '€',
+						'€': '€',
+						'&sect;': '§',
+						'§': '§',
+						'&copy;': '©',
+						'©': '©',
+						'&reg;': '®',
+						'®': '®',
+						'&trade;': '™',
+						'™': '™',
+						'&times;': '×',
+						'×': '×',
+						'&divide;': '÷',
+						'÷': '÷'
+					};
+			 if (str === null) {
+					return '';
+				}
+				str = str.toString();
+				return str.indexOf(';') < 0 ? str : str.replace(reg, function(chars) {
+					return entity[chars];
+				});
+			}
 		}
 	}
 </script>
@@ -318,6 +340,7 @@
 				text-align: center;
 				padding: 30rpx 0 20rpx;
 			}
+
 			.c-content {
 				padding: 24rpx;
 			}
@@ -328,7 +351,7 @@
 			display: flex;
 			padding: 20rpx;
 			justify-content: space-between;
-			
+
 
 			.grid-list {
 				width: 75%;

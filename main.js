@@ -6,7 +6,12 @@ import uView from '@/uni_modules/uview-ui'
 import common from './util/common.js'
 import http from './util/http.js'
 import store from './store'
+<<<<<<< HEAD
 Vue.prototype.$toast = function(message, duration) {
+=======
+
+Vue.prototype.$toast = function(message,duration) {
+>>>>>>> ec61377273dbc2b35271012bc04bdb895e04c916
 	uni.showToast({
 		icon: "none",
 		title: message,
@@ -16,6 +21,7 @@ Vue.prototype.$toast = function(message, duration) {
 
 Vue.prototype.http = http;
 Vue.prototype.$store = store;
+// Vue.mixin(share)
 Vue.use(uView)
 Vue.config.productionTip = false;
 Vue.prototype.base = common;
