@@ -58,6 +58,18 @@
 			}
 		},
 		{
+			"path": "pages/phone/phone",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"app-plus": { // 隐藏系统导航栏
+					"titleNView": false
+				}
+			}
+		
+		},
+		{
 			"path": "pages/user/modifyPwd/modifyPwd",
 			"style": {
 				"navigationBarTitleText": "修改密码",
@@ -79,19 +91,6 @@
 				// "iconPath": "static/assets/home.png",
 				// "selectedIconPath": "static/assets/home_actived.png",
 				"text": "首页"
-			},
-
-			// {
-			// 	"pagePath": "pages/form/form",
-			// 	"text": "统计"
-			// },
-			// {
-			// 	"pagePath": "pages/message/message",
-			// 	"text": "消息"
-			// },
-			{
-				"pagePath": "pages/user/user",
-				"text": "消息"
 			}
 		]
 	},

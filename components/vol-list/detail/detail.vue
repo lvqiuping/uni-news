@@ -3,7 +3,7 @@
 		<view class="title-info">
 			<view class="t-title over_two_lines">{{data.title}}</view>
 			<view class="t-tips">
-				<text class="t-user">东莞本地宝</text>
+				<text class="t-user"></text>
 				<text>{{data.create_time}}</text>
 			</view>
 		</view>
@@ -13,9 +13,12 @@
 			</view>
 			<view class="c-bottom">
 				<view class="grid-list">
-					<view class="grid-item" @click="gridClick(item)" v-for="(item,index) in iconList" :key="index">
+					<view class="grid-item" @click="gridClick(item.value, index, item.name)"
+						v-for="(item,index) in iconList" :key="index">
 						<view class="grid-icon">
-							<u-icon :color="item.color" size="22" :name="item.icon"></u-icon>
+							<u-button :open-type="item.openType">
+								<u-icon :color="item.color" size="22" :name="item.icon"></u-icon>
+							</u-button>
 						</view>
 						<view class="grid-text">
 							{{item.name}}
@@ -31,42 +34,18 @@
 				<view @click="getComment">写留言</view>
 			</view>
 			<view class="f-list">
-				<view v-for="(item, index) in list" style="display: flex; justify-content: space-between">
+				<view v-for="(item, index) in commentList" style="display: flex; justify-content: space-between">
 					<view>{{item.content}}</view>
 					<view style="display: flex;" @click="support(item.id)">
-						<u-icon color="#dd6161" size="22" name="thumb-up" />{{item.support}}
+						<u-icon :color="supportColor.color" size="22" name="thumb-up" />{{item.support}}
 					</view>
 				</view>
+
 			</view>
 		</view>
 
 		<view style="height: 20rpx;"></view>
 		<!-- 弹框 -->
-		<u-popup :show="show" mode="bottom" @close="close" @open="open">
-			<view class="u-po">
-				<view class="u-po-title">东莞本地宝
-					<u-icon name="arrow-right" color="#333333" size="20" style="margin-left: 20rpx;" />
-				</view>
-				<view class="c-bottom">
-					<view class="grid-list" v-for="(item,index) in grid">
-						<view class="grid-title">
-							<view class="grid-title-text">
-								{{item.name}}
-							</view>
-						</view>
-						<view class="grid-item" @click="gridClick(data.value)" v-for="(data,dindex) in item.data"
-							:key="dindex">
-							<view class="grid-icon" :class="data.bg">
-								<u-icon color="#333" size="22" :name="data.icon"></u-icon>
-							</view>
-							<view class="grid-text">
-								{{data.name}}
-							</view>
-						</view>
-					</view>
-				</view>
-			</view>
-		</u-popup>
 		<u-popup :show="addComment" mode="bottom" @close="close" @open="open">
 			<u--form labelPosition="left" :model="comment" ref="form1">
 				<u-form-item prop="content" borderBottom>
@@ -87,63 +66,157 @@
 	export default {
 		data() {
 			return {
-				show: false,
 				addComment: false,
 				loading: true,
 				collect: false,
 				data: {},
-				userInfo: {},
+				newsInfo: {},
 				iconList: [{
 					name: "分享",
 					icon: "share",
 					value: "share",
-					color: "#333"
+					color: "#333",
+					openType: "share"
 				}, {
 					name: "收藏",
 					icon: "star",
 					value: "collect",
-					color: "#333"
+					color: "#333",
+					openType: ""
 				}, {
 					name: "点赞",
 					icon: "thumb-up",
 					value: "support",
-					color: "#333"
+					color: "#333",
+					openType: ""
 				}],
-				list: [],
+				commentList: [],
 				id: 0,
 				page: 0,
 				comment: {
 					content: '',
 				},
-
+				supportColor: {
+					color: "#333333"
+				},
+				params: {
+					openid: ''
+				}
 			}
 		},
+		// 分享给朋友
+		onShareAppMessage: function(options) {
+			console.log('fenxiag', options)
+			// must return custom share data when user share.
+			return {
+				title: '吕秋萍',
+				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.$store.state.userInfo.openid,
+				success(res) {
+					console.log('分享成功', res)
+				},
+				fail(res){
+					console.log('分享失败', res)
+				}
+			}
+			
+		},
+		// 分享到朋友圈，加上这个上面微信自带的按钮才会能选择
+		onShareTimeline: function() {
+			var that = this
+			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.$store.state.userInfo.openid
+			console.log('testQuery', testQuery)
+			return {
+				title: '吕秋萍小程序',
+				query: testQuery
+			}
 
-
+		},
 		onLoad(option) {
 			var that = this;
 			uni.setNavigationBarTitle({
 				title: option.title
 			})
-			that.userInfo.id = option.id
+
+			that.newsInfo.id = option.id
+			console.log('option', option)
 		},
 		onShow() {
+			console.log('onShow')
 			var that = this;
-			that.userInfo.openid = that.$store.state.userInfo.openid
-			let params = {
-				id: that.userInfo.id,
-				openid: that.userInfo.openid
+			//如果没有登陆，跳转登录页登陆 'oRFRh45RnqBE7vaimacaqFLPRoXk'
+			if (that.$store.state.userInfo == null) {
+				console.log('没有openid')
+				uni.showModal({
+					title: '查看并授权',
+					content: '是否授权',
+					confirmColor: '#FC5C5B',
+					success: (res) => {
+						if (res.confirm) {
+							console.log('用户点击确定');
+							that.wechatLogin()
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+
+					},
+
+				})
+			} else {
+				that.newsInfo.openid = that.$store.state.userInfo.openid
+				let params = {
+					id: that.newsInfo.id,
+					openid: that.newsInfo.openid
+				}
+				// 初始化新闻内容
+				that.http.get("/News/read", params, false).then(result => {
+						that.data = Object.assign({}, that.data, result.data);
+						that.loading = false;
+					}),
+					that.getList();
+				that.gridClick('read_count'); // 进入页面就加一次阅读量
 			}
-			that.http.get("/News/read", params, false).then(result => {
-					that.data = result.data;
-					that.loading = false;
-				}),
-				that.getList();
-			that.gridClick('read_count'); // 进入页面就加一次阅读量
+
 		},
 		methods: {
+			wechatLogin() {
+				var that = this
+				uni.getUserProfile({ // 调起微信询问是否登录，拿到用户信息
+					desc: 'yongyu',
+					lang: 'zh_CN',
+					success: res => {
+						if (res) {
+							wx.login({ // 拿到code
+								success(res2) {
+									let params = {
+										userInfo: res.userInfo,
+										code: res2.code
+									}
+									that.http.post("/User/login", params, "正在登录....")
+										.then((result) => {
+											if (result.code != 1) {
+												that.loading = false;
+												return that.$toast(result.msg);
+											}
+											that.$toast("登录成功,正在跳转!");
+											that.$store.commit("setUserInfo", result.data); //存用户信息
+											uni.switchTab({
+												url: "/pages/home/home"
+											})
+										});
+								}
+							})
+						}
+					},
+					fail: err => {
+						console.log('err', err)
+					}
+				})
+			},
 			getComment() {
 				this.addComment = true
+				this.comment = {
+					content: '',
+				}
 			},
 			open() {
 				// console.log('open');
@@ -156,90 +229,59 @@
 			support(id) {
 				var that = this
 				let params = {
-					openid: that.userInfo.openid,
+					openid: that.newsInfo.openid,
 					id: id
 				}
 				that.http.get("/NewsComments/setInc", params, false).then(result => {
-					console.log("点赞", result)
+					console.log("点赞别人的评论", result)
 					that.getList()
 				})
 			},
-			gridClick(p) {
+			gridClick(p, index, name = '') {
 				var that = this;
-				let params = {}
-				if (p.value === 'share') {
-					// 	// params = {id: that.userInfo.id, openid: that.userInfo.openid, share: 1}
-					// 	// let routes = getCurrentPages();
-					// 	// let curRoute = routes[routes.length - 1].$page.fullPath
-					// 	uni.share({
-					// 		provider: "weixin",
-					// 		scene: 'WXSceneSession', //分享场景
-					// 		type: '1',
-					// 		href: '',
-					// 		title: '率秋萍',
-					// 		summary: '888',
-					// 		imageUrl: '',
-					// 		success:function(res) {
-					// 			that.posters = false
-					// 		},
-					// 		fail: function(err) {
-					// 			uni.showToast({
-					// 				title: '分享失败',
-					// 				icon: 'none',
-					// 				duration:2000
-					// 			})
-					// 			that.posters = false
-					// 		}
-					// 	})
-				} else if (p.value === 'collect') {
-					params = {
-						id: that.userInfo.id,
-						openid: that.userInfo.openid,
-						collect: 1
-					}
-				} else if (p.value === 'support') {
-
-					params = {
-						id: that.userInfo.id,
-						openid: that.userInfo.openid,
-						support: 1
-					}
-				} else if (p.value === 'read_count') {
-					params = {
-						id: that.userInfo.id,
-						openid: that.userInfo.openid,
-						read_count: 1
-					}
+				let params = {
+					id: that.newsInfo.id,
+					openid: that.newsInfo.openid
 				}
-
-				console.log('params8888', params)
-				return
+				params[p] = 1
 				that.http.get("/News/setInc", params, false).then(result => {
-					console.log("更新", result)
+					if (!['share', 'read_count'].includes(p)) {
+						uni.showToast({
+							title: name + '成功'
+						})
+						console.log(that.iconList)
+						console.log(that.iconList[index])
+						that.iconList[index].color = "#FC5C5B"
+					}
 				})
 			},
 			getList() {
 				var that = this;
 				let params = {
-					openid: that.userInfo.openid,
-					news_id: that.userInfo.id
+					openid: that.newsInfo.openid,
+					news_id: that.newsInfo.id
 				}
 				that.http.get("/NewsComments/index", params, false).then(result => {
-					that.list = result.data;
+					result.data.color = "#333"
+					that.commentList = result.data;
 					that.loading = false;
 				})
 			},
 			submit() {
 				var that = this
 				let params = {
-					openid: that.userInfo.openid,
-					news_id: that.userInfo.id,
+					openid: that.newsInfo.openid,
+					news_id: that.newsInfo.id,
 					content: that.comment.content
 				}
 				that.http.post("/NewsComments/save", params, false).then(res => {
 					that.addComment = false
 					that.getList()
 				});
+			},
+			cancel() {
+				this.addComment = false
+				return
 			},
 			unescapeEntity(str) {
 				var reg =
@@ -258,9 +300,9 @@
 						'&cent;': '￠',
 						'¢': '￠',
 						'&pound;': '£',
-			  	'£': '£',
+						'£': '£',
 						'&yen;': '¥',
-			 		'¥': '¥',
+						'¥': '¥',
 						'&euro;': '€',
 						'€': '€',
 						'&sect;': '§',
@@ -276,7 +318,7 @@
 						'&divide;': '÷',
 						'÷': '÷'
 					};
-			 if (str === null) {
+				if (str === null) {
 					return '';
 				}
 				str = str.toString();
