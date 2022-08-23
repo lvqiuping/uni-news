@@ -6,12 +6,8 @@ import uView from '@/uni_modules/uview-ui'
 import common from './util/common.js'
 import http from './util/http.js'
 import store from './store'
-<<<<<<< HEAD
-Vue.prototype.$toast = function(message, duration) {
-=======
 
-Vue.prototype.$toast = function(message,duration) {
->>>>>>> ec61377273dbc2b35271012bc04bdb895e04c916
+Vue.prototype.$toast = function(message, duration) {
 	uni.showToast({
 		icon: "none",
 		title: message,
