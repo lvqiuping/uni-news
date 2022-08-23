@@ -124,7 +124,6 @@
 		onShareTimeline: function() {
 			var that = this
 			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.$store.state.userInfo.openid
-			console.log('testQuery', testQuery)
 			return {
 				title: '吕秋萍小程序',
 				query: testQuery
@@ -138,80 +137,22 @@
 			})
 
 			that.newsInfo.id = option.id
-			console.log('option', option)
 		},
 		onShow() {
-			console.log('onShow')
 			var that = this;
-			//如果没有登陆，跳转登录页登陆 'oRFRh45RnqBE7vaimacaqFLPRoXk'
-			if (that.$store.state.userInfo == null) {
-				console.log('没有openid')
-				uni.showModal({
-					title: '查看并授权',
-					content: '是否授权',
-					confirmColor: '#FC5C5B',
-					success: (res) => {
-						if (res.confirm) {
-							console.log('用户点击确定');
-							that.wechatLogin()
-						} else if (res.cancel) {
-							console.log('用户点击取消');
-						}
-
-					},
-
-				})
-			} else {
-				that.newsInfo.openid = that.$store.state.userInfo.openid
-				let params = {
-					id: that.newsInfo.id,
-					openid: that.newsInfo.openid
-				}
-				// 初始化新闻内容
-				that.http.get("/News/read", params, false).then(result => {
-						that.data = Object.assign({}, that.data, result.data);
-						that.loading = false;
-					}),
-					that.getList();
-				that.gridClick('read_count'); // 进入页面就加一次阅读量
+			
+			let params = {
+				id: that.newsInfo.id
 			}
-
+			// 初始化新闻内容
+			that.http.get("/News/read", params).then(result => {
+					that.data = Object.assign({}, that.data, result.data);
+					that.loading = false;
+				}),
+			that.getList();
+			that.gridClick('read_count'); // 进入页面就加一次阅读量
 		},
 		methods: {
-			wechatLogin() {
-				var that = this
-				uni.getUserProfile({ // 调起微信询问是否登录，拿到用户信息
-					desc: 'yongyu',
-					lang: 'zh_CN',
-					success: res => {
-						if (res) {
-							wx.login({ // 拿到code
-								success(res2) {
-									let params = {
-										userInfo: res.userInfo,
-										code: res2.code
-									}
-									that.http.post("/User/login", params, "正在登录....")
-										.then((result) => {
-											if (result.code != 1) {
-												that.loading = false;
-												return that.$toast(result.msg);
-											}
-											that.$toast("登录成功,正在跳转!");
-											that.$store.commit("setUserInfo", result.data); //存用户信息
-											uni.switchTab({
-												url: "/pages/home/home"
-											})
-										});
-								}
-							})
-						}
-					},
-					fail: err => {
-						console.log('err', err)
-					}
-				})
-			},
 			getComment() {
 				this.addComment = true
 				this.comment = {
@@ -232,25 +173,21 @@
 					openid: that.newsInfo.openid,
 					id: id
 				}
-				that.http.get("/NewsComments/setInc", params, false).then(result => {
-					console.log("点赞别人的评论", result)
+				that.http.get("/NewsComments/setInc", params).then(result => {
 					that.getList()
 				})
 			},
 			gridClick(p, index, name = '') {
 				var that = this;
 				let params = {
-					id: that.newsInfo.id,
-					openid: that.newsInfo.openid
+					id: that.newsInfo.id
 				}
 				params[p] = 1
-				that.http.get("/News/setInc", params, false).then(result => {
+				that.http.get("/News/setInc", params).then(result => {
 					if (!['share', 'read_count'].includes(p)) {
 						uni.showToast({
 							title: name + '成功'
 						})
-						console.log(that.iconList)
-						console.log(that.iconList[index])
 						that.iconList[index].color = "#FC5C5B"
 					}
 				})
@@ -258,10 +195,9 @@
 			getList() {
 				var that = this;
 				let params = {
-					openid: that.newsInfo.openid,
 					news_id: that.newsInfo.id
 				}
-				that.http.get("/NewsComments/index", params, false).then(result => {
+				that.http.get("/NewsComments/index", params).then(result => {
 					result.data.color = "#333"
 					that.commentList = result.data;
 					that.loading = false;
@@ -270,11 +206,10 @@
 			submit() {
 				var that = this
 				let params = {
-					openid: that.newsInfo.openid,
 					news_id: that.newsInfo.id,
 					content: that.comment.content
 				}
-				that.http.post("/NewsComments/save", params, false).then(res => {
+				that.http.post("/NewsComments/save", params).then(res => {
 					that.addComment = false
 					that.getList()
 				});
@@ -318,7 +253,7 @@
 						'&divide;': '÷',
 						'÷': '÷'
 					};
-				if (str === null) {
+				if (!str) {
 					return '';
 				}
 				str = str.toString();

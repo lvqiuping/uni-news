@@ -7,11 +7,11 @@ if (process.env.NODE_ENV === 'development') {
 	ipAddress = "https://applet.hbosw.net/api/"
 }
 
-function post(url, data, loading) {
+function post(url, data = {}, loading = false) {
 	return request(url, 'POST', data, loading);
 }
 
-async function get(url, data, loading) {
+async function get(url, data = {}, loading = false) {
 	return request(url, 'GET', data, loading);
 }
 
@@ -19,12 +19,18 @@ function getToken() {
 	return store.getters.getToken();
 }
 
-function request(url, method, data, loading) {
+function request(url, method = 'GET', data = {}, loading = false) {
 	if (loading) {
 		uni.showLoading({
 			title: typeof loading == 'boolean' ? "正在处理..." : loading
 		})
 	}
+	
+	const userInfo = uni.getStorageSync('userInfo')
+	if (userInfo) {
+		data.openid = userInfo.openid
+	}
+	
 	if (url.startsWith("/")) {
 		url = url.substr(1)
 	}

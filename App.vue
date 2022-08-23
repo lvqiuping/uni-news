@@ -1,7 +1,12 @@
 <script>
 	export default {
 		onLaunch: function() {
-			console.log('App Launch')
+			const userInfo = uni.getStorageSync('userInfo')
+			if (!userInfo) {
+				uni.navigateTo({
+					url: '/pages/login/login'
+				})
+			}
 		},
 		onShow: function() {
 			console.log('App Show')

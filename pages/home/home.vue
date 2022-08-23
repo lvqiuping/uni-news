@@ -2,8 +2,8 @@
 	<view :style="{height:height+50+'px'}">
 		<view class="user-info">
 			<view class="u-left">
-				<image class="u-img" :src="userInfo.img"></image>
-				<view class="u-title">{{userInfo.userName}}</view>
+				<image class="u-img" :src="userInfo.header_img"></image>
+				<view class="u-title">{{userInfo.nickname}}</view>
 			</view>
 			<view class="u-right">
 				<u--input 
@@ -76,9 +76,7 @@
 		},
 		onShow() {
 			var that = this;
-			that.userInfo.img = that.$store.state.userInfo.header_img
-			that.userInfo.userName = that.$store.state.userInfo.nickname
-			that.userInfo.openid = that.$store.state.userInfo.openid
+			this.userInfo = uni.getStorageSync('userInfo')
 			uni.hideTabBar({
 				animation: false
 			})
@@ -92,11 +90,8 @@
 				})
 			},
 			getNav() {
-				var that = this;
-				let params = {
-					openid: that.userInfo.openid
-				}
-				that.http.get("/NewsCate/index", params, false).then(result => {
+				var that = this
+				that.http.get("/NewsCate/index").then(result => {
 					result.data.forEach((item) => {
 						that.tabsTitle.push({
 							name: item.title,
@@ -113,10 +108,9 @@
 			getList(cid) {
 				var that = this;
 				let params = {
-					openid: that.userInfo.openid,
 					cid: cid
 				}
-				that.http.get("/News/index", params, false).then(result => {
+				that.http.get("/News/index", params).then(result => {
 					that.list = result.data;
 				})
 			},

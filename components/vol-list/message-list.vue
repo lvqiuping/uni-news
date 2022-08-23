@@ -77,14 +77,17 @@
 		// #endif
 		methods: {
 			toDetail(item) {
-				// if(this.$store.state.userInfo.phone === null){
-				// 	uni.navigateTo({
-				// 		url: '/pages/phone/phone'
-				// 	})
-				// }
-				uni.navigateTo({
-					url: '/components/vol-list/detail/detail?id=' + item.id + "&title=" + item.title
-				})
+				const userInfo = uni.getStorageSync('userInfo')
+				if(!userInfo.phone){
+					uni.navigateTo({
+						url: '/pages/phone/phone'
+					})
+				} else {
+					uni.navigateTo({
+						url: '/components/vol-list/detail/detail?id=' + item.id + "&title=" + item.title
+					})
+				}
+				
 			}
 		}
 	}

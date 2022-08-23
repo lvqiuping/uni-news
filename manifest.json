@@ -98,7 +98,7 @@
         },
         "usingComponents" : true,
         "unipush" : {
-            "enable" : true
+            "enable" : false
         },
         "permission" : {
             "scope.userLocation" : {
@@ -118,5 +118,5 @@
     "uniStatistics" : {
         "enable" : false
     },
-    "vueVersion" : "3"
+    "vueVersion" : "2"
 }
