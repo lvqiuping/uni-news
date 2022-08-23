@@ -1,6 +1,6 @@
 <template>
 	<view class="">
-		<u-divider text="选择登陆"></u-divider>
+		<u-divider text="授权登陆"></u-divider>
 		<view class="login-other">
 			<image @click="wechatLogin" class="img" :key="index" v-for="(src,index) in icons" :src="src">
 		</view>
@@ -18,13 +18,16 @@
 			wechatLogin() {
 				var that = this
 				uni.getUserProfile({ // 调起微信询问是否登录，拿到用户信息
-					desc: 'yongyu',
+					desc: '用于完善会员信息',
 					lang: 'zh_CN',
 					success: res => {
 						if (res) {
 							wx.login({ // 拿到code
 								success(res2) {
-									let params = { userInfo: res.userInfo, code: res2.code }
+									let params = {
+										userInfo: res.userInfo,
+										code: res2.code
+									}
 									that.http.post("/User/login", params, "正在登录....")
 										.then((result) => {
 											if (result.code != 1) {
@@ -33,12 +36,14 @@
 											}
 											that.$toast("登录成功,正在跳转!");
 											that.$store.commit("setUserInfo", result.data); //存用户信息
+											console.log(result)
 											uni.switchTab({
 												url: "/pages/home/home"
 											})
 										});
 								}
 							})
+
 						}
 					},
 					fail: err => {
@@ -48,6 +53,20 @@
 			}
 		},
 		onLoad() {
+			uni.showModal({
+				title: '授权登录',
+				content: '是否授权',
+				success: (res) => {
+					if (res.confirm) {
+								console.log('用户点击确定');
+								this.wechatLogin()
+							} else if (res.cancel) {
+								console.log('用户点击取消');
+							}
+					
+				},
+				
+			}),
 			// #ifdef MP-WEIXIN
 			this.icons = ['https://img.yzcdn.cn/vant/share-icon-wechat.png']
 			return

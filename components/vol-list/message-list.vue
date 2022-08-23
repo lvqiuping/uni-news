@@ -49,13 +49,6 @@
 				}
 			}
 		},
-		methods: {
-			toDetail(item) {
-				uni.navigateTo({
-					url: '/components/vol-list/detail/detail?id=' + item.id
-				})
-			}
-		},
 		data() {
 			return {
 				localImage1: '/static/imgs/2x.png',
@@ -64,7 +57,8 @@
 					'/static/swiper2.png',
 					'/static/swiper3.png'
 				],
-				data: []
+				data: [],
+				phone: false
 			}
 		},
 		created() {
@@ -81,6 +75,18 @@
 			}
 		},
 		// #endif
+		methods: {
+			toDetail(item) {
+				// if(this.$store.state.userInfo.phone === null){
+				// 	uni.navigateTo({
+				// 		url: '/pages/phone/phone'
+				// 	})
+				// }
+				uni.navigateTo({
+					url: '/components/vol-list/detail/detail?id=' + item.id + "&title=" + item.title
+				})
+			}
+		}
 	}
 </script>
 <style lang="less" scoped>
