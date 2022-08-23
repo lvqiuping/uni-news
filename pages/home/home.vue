@@ -69,18 +69,19 @@
 					that.height = data.statusBarHeight;
 				}
 			})
+			
+			this.userInfo = uni.getStorageSync('userInfo')
+			console.log(this.userInfo)
+			uni.hideTabBar({
+				animation: false
+			})
+			that.getList(that.cid0)
 		},
 		async onLoad() {
 			var that = this;
 			await that.getNav();
 		},
 		onShow() {
-			var that = this;
-			this.userInfo = uni.getStorageSync('userInfo')
-			uni.hideTabBar({
-				animation: false
-			})
-			that.getList(that.cid0)
 		},
 		methods: {
 			search() {
