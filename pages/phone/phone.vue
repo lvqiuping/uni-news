@@ -1,7 +1,7 @@
 <template>
 	<view class="">
 		<u-button openType="getPhoneNumber" @getphonenumber="getPhoneNumber">
-			æ‰‹æœºæˆæƒ
+			Çë°ó¶¨ÊÖ»úºÅ
 		</u-button>
 	</view>
 </template>
@@ -17,6 +17,20 @@
 		methods: {
 			getPhoneNumber(e) {
 				console.log(e)
+				if (e.detail.errMsg === 'getPhoneNumber:ok') {
+					this.http.post('/User/getUserPhoneNumber', { code: e.detail.code }).then(res => {
+						if (res.code === 1)  {
+							const userInfo = uni.getStorageSync('userInfo')
+							userInfo.phone = res.data.phoneNumber
+							uni.setStorageSync('userInfo', userInfo)
+							uni.switchTab({
+								url: "/pages/home/home"
+							})
+						}
+					})
+				} else if (e.detail.errMsg === 'getPhoneNumber:fail user deny') {
+					
+				}
 				
 			}
 		}

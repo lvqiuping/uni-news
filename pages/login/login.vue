@@ -14,6 +14,28 @@
 				icons: [],
 			}
 		},
+		onLoad() {
+			uni.showModal({
+					title: '授权登录',
+					content: '是否授权',
+					success: (res) => {
+						if (res.confirm) {
+							this.wechatLogin()
+						} else if (res.cancel) {
+						}
+
+					},
+
+				}),
+				// #ifdef MP-WEIXIN
+				this.icons = ['https://img.yzcdn.cn/vant/share-icon-wechat.png']
+			return
+			// #endif
+			this.icons = ['https://img.yzcdn.cn/vant/share-icon-qq.png',
+				'https://img.yzcdn.cn/vant/share-icon-wechat.png',
+				'https://img.yzcdn.cn/vant/share-icon-weibo.png'
+			]
+		},
 		methods: {
 			wechatLogin() {
 				var that = this
@@ -35,8 +57,8 @@
 												return that.$toast(result.msg);
 											}
 											that.$toast("登录成功,正在跳转!");
-											that.$store.commit("setUserInfo", result.data); //存用户信息
 											console.log(result)
+											uni.setStorageSync('userInfo', result.data)
 											uni.switchTab({
 												url: "/pages/home/home"
 											})
@@ -51,30 +73,6 @@
 					}
 				})
 			}
-		},
-		onLoad() {
-			uni.showModal({
-				title: '授权登录',
-				content: '是否授权',
-				success: (res) => {
-					if (res.confirm) {
-								console.log('用户点击确定');
-								this.wechatLogin()
-							} else if (res.cancel) {
-								console.log('用户点击取消');
-							}
-					
-				},
-				
-			}),
-			// #ifdef MP-WEIXIN
-			this.icons = ['https://img.yzcdn.cn/vant/share-icon-wechat.png']
-			return
-			// #endif
-			this.icons = ['https://img.yzcdn.cn/vant/share-icon-qq.png',
-				'https://img.yzcdn.cn/vant/share-icon-wechat.png',
-				'https://img.yzcdn.cn/vant/share-icon-weibo.png'
-			]
 		}
 	}
 </script>

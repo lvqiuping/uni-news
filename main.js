@@ -7,20 +7,20 @@ import common from './util/common.js'
 import http from './util/http.js'
 import store from './store'
 
-Vue.prototype.$toast = function(message,duration) {
+Vue.prototype.$toast = function(message, duration) {
 	uni.showToast({
 		icon: "none",
 		title: message,
-		duration:duration||2000
+		duration: duration || 2000
 	})
 }
 
-Vue.prototype.http=http;
+Vue.prototype.http = http;
 Vue.prototype.$store = store;
 // Vue.mixin(share)
 Vue.use(uView)
 Vue.config.productionTip = false;
-Vue.prototype.base=common;
+Vue.prototype.base = common;
 App.mpType = 'app'
 const app = new Vue({
 	...App
