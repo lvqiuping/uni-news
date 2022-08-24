@@ -78,22 +78,22 @@
 		
 		}
 	],
-	"tabBar": { //设置要与第一个pages的path相同
-		"color": "#7A7E83",
-		"selectedColor": "#F1A532",
-		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
-		"list": [{
-				"pagePath": "pages/menu/menu",
-				"text": "菜单"
-			}, {
-				"pagePath": "pages/home/home",
-				// "iconPath": "static/assets/home.png",
-				// "selectedIconPath": "static/assets/home_actived.png",
-				"text": "首页"
-			}
-		]
-	},
+	// "tabBar": { //设置要与第一个pages的path相同
+	// 	"color": "#7A7E83",
+	// 	"selectedColor": "#F1A532",
+	// 	"borderStyle": "black",
+	// 	"backgroundColor": "#ffffff",
+	// 	"list": [{
+	// 			"pagePath": "pages/menu/menu",
+	// 			"text": "菜单"
+	// 		}, {
+	// 			"pagePath": "pages/home/home",
+	// 			// "iconPath": "static/assets/home.png",
+	// 			// "selectedIconPath": "static/assets/home_actived.png",
+	// 			"text": "首页"
+	// 		}
+	// 	]
+	// },
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

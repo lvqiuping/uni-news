@@ -40,8 +40,6 @@
 				</u-skeleton>
 			</view>
 		</view>
-		<view style="height: 115rpx;"></view>
-		<vol-tabbar :index="0"></vol-tabbar>
 	</view>
 </template>
 

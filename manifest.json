@@ -97,14 +97,7 @@
             "minified" : true
         },
         "usingComponents" : true,
-        "unipush" : {
-            "enable" : false
-        },
-        "permission" : {
-            "scope.userLocation" : {
-                "desc" : ""
-            }
-        }
+        "permission" : {}
     },
     "mp-alipay" : {
         "usingComponents" : true
