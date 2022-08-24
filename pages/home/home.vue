@@ -6,18 +6,13 @@
 				<view class="u-title">{{userInfo.nickname}}</view>
 			</view>
 			<view class="u-right">
-				<u-search 
-				placeholder="请输入新闻标题" 
-				v-model="searchWord"
-				:showAction=fasle
-				@search="search"
-				></u-search>
+				<u-search placeholder="请输入新闻标题" v-model="searchWord" :showAction=fasle @search="search"></u-search>
 			</view>
 		</view>
 		<view class="tabs-info">
 			<view class="t-title">
 				<u-sticky bgColor="#fff">
-					<u-tabs :list="tabsTitle" lineColor="#f56c6c" :activeStyle="{
+					<u-tabs :list="tabsTitle" lineColor="#f56c6c" :current="index" :activeStyle="{
 						            color: '#Fc5c5b',
 						            fontWeight: 'bold',
 									fontSize: '30rpx',
@@ -26,13 +21,14 @@
 						            color: '#606266',
 									fontSize: '30rpx',
 						            transform: 'scale(1)'
-						        }" itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;" @change="tabsClick" />
+						        }" itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;" @click="tabsClick"
+						@change="tabsChange" />
 				</u-sticky>
 			</view>
 			<view class="t-list">
 				<u-skeleton rows="3" :loading="loading" avatar :title="false">
 					<u-list :height="height" :lowerThreshold='50'>
-						<message-list :list="list"></message-list>
+						<message-list :list="list[index]"></message-list>
 					</u-list>
 				</u-skeleton>
 			</view>
@@ -53,7 +49,8 @@
 				height: 0,
 				cid0: 0,
 				userInfo: {},
-				searchWord: ''
+				searchWord: '',
+				index: 0
 			}
 		},
 
@@ -64,19 +61,14 @@
 					that.height = data.statusBarHeight;
 				}
 			})
-			
-			
-		},
-		async onLoad() {
-			var that = this;
-			await that.getNav();
+
+			that.getNav();
 		},
 		onShow() {
 			this.userInfo = uni.getStorageSync('userInfo')
 			uni.hideTabBar({
 				animation: false
 			})
-			that.getList(that.cid0)
 		},
 		methods: {
 			search() {
@@ -92,11 +84,12 @@
 							name: item.title,
 							id: item.id
 						}) // 框架需要的格式
-						that.cid0 = that.tabsTitle[0].id // 如何让一进页面就传递这个Id给list
 					})
+					that.getList(result.data[0].id)
 				})
 			},
 			tabsClick(v) {
+				this.index = v.index
 				this.getList(v.id);
 			},
 			// 获取列表写进list
@@ -106,9 +99,21 @@
 					cid: cid
 				}
 				that.http.get("/News/index", params).then(result => {
-					that.list = result.data;
+					console.log(result)
+					let c = that.list[that.index]
+					console.log('c', c)
+					if (c) {
+						c.concat(result.data)
+					} else {
+						that.$set(that.list, that.index, result.data)
+					}
+
+					console.log('list', that.list[that.index])
 				})
 			},
+			tabsChange(v) {
+				console.log(v)
+			}
 		}
 	}
 </script>
@@ -140,9 +145,7 @@
 			}
 		}
 
-		.u-right {
-			
-		}
+		.u-right {}
 	}
 
 	.tabs-info {
