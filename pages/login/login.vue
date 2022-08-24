@@ -1,6 +1,6 @@
 <template>
 	<view class="">
-		<u-divider text="授权登陆"></u-divider>
+		<u-divider text="授权登陆" @click="wechatLogin"></u-divider>
 		<view class="login-other">
 			<image @click="wechatLogin" class="img" :key="index" v-for="(src,index) in icons" :src="src">
 		</view>
@@ -38,6 +38,7 @@
 		},
 		methods: {
 			wechatLogin() {
+				console.log('444')
 				var that = this
 				uni.getUserProfile({ // 调起微信询问是否登录，拿到用户信息
 					desc: '用于完善会员信息',

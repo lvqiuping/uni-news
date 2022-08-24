@@ -1,7 +1,7 @@
 <template>
 	<view class="">
 		<u-button openType="getPhoneNumber" @getphonenumber="getPhoneNumber">
-			Çë°ó¶¨ÊÖ»úºÅ
+			å…è®¸èŽ·å–æ‰‹æœº
 		</u-button>
 	</view>
 </template>

@@ -6,15 +6,12 @@
 				<view class="u-title">{{userInfo.nickname}}</view>
 			</view>
 			<view class="u-right">
-				<u--input 
-				v-model="searchWord" 
-				placeholder="大家都在搜" 
-				clearable 
-				suffixIcon="search"
-				suffixIconStyle="color: #909399"
-				 @change="search()"
-				>
-				</u--input>
+				<u-search 
+				placeholder="请输入新闻标题" 
+				v-model="searchWord"
+				:showAction=fasle
+				@search="search"
+				></u-search>
 			</view>
 		</view>
 		<view class="tabs-info">
@@ -41,7 +38,7 @@
 			</view>
 		</view>
 		<view style="height: 115rpx;"></view>
-		<vol-tabbar :index="0"></vol-tabbar>
+	<!-- 	<vol-tabbar :index="0"></vol-tabbar> -->
 	</view>
 </template>
 
@@ -69,6 +66,8 @@
 					that.height = data.statusBarHeight;
 				}
 			})
+			
+			
 		},
 		async onLoad() {
 			var that = this;
@@ -76,17 +75,15 @@
 		},
 		onShow() {
 			this.userInfo = uni.getStorageSync('userInfo')
-			console.log(this.userInfo)
 			uni.hideTabBar({
 				animation: false
 			})
-			this.getList(this.cid0)
+			that.getList(that.cid0)
 		},
 		methods: {
 			search() {
-				console.log('this.searchWord', this.searchWord)
-				uni.showToast({
-					title: '搜索失败'
+				uni.navigateTo({
+					url: '/components/vol-list/search-list/search-list?title=' + this.searchWord
 				})
 			},
 			getNav() {
@@ -122,6 +119,7 @@
 		margin: 40rpx 20rpx 20rpx;
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 
 		.u-left {
 			display: flex;
@@ -145,8 +143,7 @@
 		}
 
 		.u-right {
-			border: 1px solid #333333;
-			border-radius: 50rpx;
+			
 		}
 	}
 

@@ -21,7 +21,7 @@
 			</view>
 
 		</view>
-		<vol-tabbar :index="1"></vol-tabbar>
+		<!-- <vol-tabbar :index="1"></vol-tabbar> -->
 	</view>
 </template>
 

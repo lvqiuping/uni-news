@@ -33,6 +33,15 @@
 		    
 		},
 		{
+		    "path" : "components/vol-list/search-list/search-list",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
 			"path": "pages/user/user",
 			"style": {
 				"navigationBarTitleText": "",

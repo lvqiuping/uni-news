@@ -140,7 +140,6 @@
 		},
 		onShow() {
 			var that = this;
-			
 			let params = {
 				id: that.newsInfo.id
 			}
@@ -162,7 +161,6 @@
 			open() {
 				// console.log('open');
 			},
-
 			close() {
 				this.show = false
 				this.addComment = false
