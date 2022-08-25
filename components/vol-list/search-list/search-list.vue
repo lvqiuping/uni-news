@@ -1,19 +1,27 @@
 <template>
 	<view>
-		<view @click="toDetail(item)" class="message-list-item" v-for="(item,index) in searchDate" :key="index">
-			<view class="message-list-item-right">
-				<view class="message-list-item-right-title over_two_lines">
-					{{item.title}}
-				</view>
-				<view class="message-list-item-right-small-text">
-					<view style="margin-right: 30rpx;">11个小时前</view>
-					<view>20个评论</view>
-				</view>
-			</view>
-			<view class="message-list-item-left">
-				<u--image width="80px" height="80px" radius="15px" :src="item.cover_img"></u--image>
-			</view>
+		<view style="margin: .5rem 0">
+			<u-search placeholder="请输入新闻标题" v-model="title" :showAction=fasle @search="search"></u-search>
 		</view>
+		<block v-if="searchData.length > 0">
+			<view @click="toDetail(item)" class="message-list-item" v-for="(item, index) in searchData" :key="index">
+				<view class="message-list-item-right">
+					<view class="message-list-item-right-title over_two_lines">
+						{{ item.title }}
+					</view>
+					<view class="message-list-item-right-small-text">
+						<view style="margin-right: 30rpx;">阅读 {{ item.read_count }}</view>
+						<view></view>
+					</view>
+				</view>
+				<view class="message-list-item-left">
+					<u--image width="80px" height="80px" radius="15px" :src="item.cover_img"></u--image>
+				</view>
+			</view>
+		</block>
+		<block v-else>
+			<u-empty mode="data"></u-empty>
+		</block>
 	</view>
 </template>
 
@@ -22,27 +30,61 @@
 		data() {
 			return {
 				title: '',
-				searchDate: []
+				searchData: [],
+				page: 1,
+				limit: 10,
+				hasMore: true
 			}
 		},
 		onLoad(option) {
 			var that = this;
 			that.title = option.title
-			that.getList(that.title)
+			that.getList()
 		},
 		// #ifdef MP-WEIXIN
-		watch: {},
+		watch: {
+			title(v) {
+				// this.getList()
+			}
+		},
 		// #endif
+		onReachBottom(e) {
+			if (!this.hasMore) {
+				uni.showToast({
+					title: '没有更多数据'
+				})
+
+				return false
+			}
+			this.getList()
+		},
 		methods: {
+			search() {
+				this.page = 1
+				this.hasMore = true
+				this.searchData = []
+				this.getList()
+			},
 			// 获取列表写进list
-			getList(title) {
+			getList() {
 				var that = this;
 				let params = {
-					title: title
+					title: this.title,
+					page: this.page,
+					limit: this.limit
 				}
-				console.log('params', params)
 				that.http.get("/News/index", params).then(result => {
-					that.searchDate = result.data;
+					if (that.limit === result.data.length) {
+						++that.page
+					} else {
+						that.hasMore = false
+					}
+
+					if (result.data.length > 0) {
+						that.searchData = that.searchData.concat(result.data)
+					} else {
+						that.searchData = result.data
+					}
 				})
 			},
 			toDetail(item) {
@@ -77,7 +119,7 @@
 		display: flex;
 		justify-content: space-between;
 		padding: 40rpx;
-		border-bottom: 1px solid #999999;
+		border-bottom: 1px solid #ccc;
 	}
 
 	.message-list-item-left {}

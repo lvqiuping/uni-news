@@ -1,41 +1,48 @@
 <template>
 	<view>
 		<view class="swiper-info">
-			<u-swiper height="538rpx" :list="swiperList" :radius="0" indicator indicatorMode="dot" circular indicatorActiveColor="#FC5C5B" />
+			<u-swiper height="538rpx" :list="swiperList" :radius="0" indicator indicatorMode="dot" circular
+				indicatorActiveColor="#FC5C5B" />
 		</view>
-		<view class="news-info">
+		<!-- <view class="news-info">
 			<view class="news-info-inner">
-					<u-row>
-						<u-col span="4">
-							<view class="n-left">
-								<u--image width="80rpx" height="80rpx" :src="localImage1"></u--image>
-								<view class="n-tips">快讯</view>
-							</view>
-						</u-col>
-						<u-col span="8">
-							<view class="n-right over_two_lines"></view>
-						</u-col>
-					</u-row>
-			
-			</view>
-		</view>
+				<u-row>
+					<u-col span="4">
+						<view class="n-left">
+							<u--image width="80rpx" height="80rpx" :src="localImage1"></u--image>
+							<view class="n-tips">快讯</view>
+						</view>
+					</u-col>
+					<u-col span="8">
+						<view class="n-right over_two_lines"></view>
+					</u-col>
+				</u-row>
 
-		<view @click="toDetail(item)" class="message-list-item" v-for="(item,index) in data" :key="index">
-			<view class="message-list-item-right">
-				<view class="message-list-item-right-title over_two_lines">
-					{{item.title}}
+			</view>
+		</view> -->
+
+		<block v-if="list.length > 0">
+			<view @click="toDetail(item)" class="message-list-item" v-for="(item, index) in list" :key="index">
+				<view class="message-list-item-right">
+					<view class="message-list-item-right-title over_two_lines">
+						{{ item.title }}
+					</view>
+					<!-- <view class="message-list-item-right-small-text" v-if="index === 0">
+					<u-tag text="置顶" type="error" shape="circle" size="large"></u-tag>
+				</view> -->
+					<view class="message-list-item-right-small-text u-line-2">
+						<view style="margin-right: 30rpx;">阅读 {{ item.read_count }}</view>
+						<view></view>
+					</view>
 				</view>
-				<view class="message-list-item-right-small-text" v-if="index===0">
-						<u-tag text="置顶" type="error" shape="circle" size="large"></u-tag>
-				</view>
-				<view class="message-list-item-right-small-text" v-else="index>0">
-				  <view style="margin-right: 30rpx;">11个小时前</view><view>20个评论</view>
+				<view class="message-list-item-left">
+					<u--image width="80px" height="80px" radius="15px" :src="item.cover_img"></u--image>
 				</view>
 			</view>
-			<view class="message-list-item-left">
-				<u--image width="80px" height="80px" radius="15px" :src="item.cover_img"></u--image>
-			</view>
-		</view>
+		</block>
+		<block v-else>
+			<u-empty mode="data"></u-empty>
+		</block>
 	</view>
 </template>
 
@@ -44,9 +51,7 @@
 		props: {
 			list: {
 				type: Array,
-				default: () => {
-					return []
-				}
+				default: () => []
 			}
 		},
 		data() {
@@ -56,58 +61,52 @@
 					'/static/swiper1.png',
 					'/static/swiper2.png',
 					'/static/swiper3.png'
-				],
-				data: [],
-				phone: false
+				]
 			}
 		},
-		created() {
-			this.data = this.list;
-		},
+		created() {},
 		// #ifdef MP-WEIXIN
 		watch: {
-			list: {
-				handler(val) {
-					this.data = val;
-				},
-				immediate: true,
-				deep: true
-			}
+			// list: {
+			// 	handler(val) {
+			// 		// console.log('val', val)
+			// 		// this.newsList = val;
+			// 	},
+			// 	immediate: true,
+			// 	deep: true
+			// }
 		},
 		// #endif
 		methods: {
 			toDetail(item) {
 				const userInfo = uni.getStorageSync('userInfo')
-				if(!userInfo.phone){
-					uni.navigateTo({
-						url: '/pages/phone/phone'
-					})
-				} else {
-					uni.navigateTo({
-						url: '/components/vol-list/detail/detail?id=' + item.id + "&title=" + item.title
-					})
-				}
-				
+				const url = !userInfo.phone ? '/pages/phone/phone' : '/components/vol-list/detail/detail?id=' + item.id +
+					"&title=" + item.title
+				uni.navigateTo({
+					url: url
+				})
 			}
 		}
 	}
 </script>
 <style lang="less" scoped>
-	.over_two_lines{
-	    display: -webkit-box;
-	    word-break: break-all;
-	    text-overflow:ellipsis;
-	    overflow: hidden;
-	    white-space: pre-line;
-	    -webkit-box-orient: vertical;
-	    -webkit-line-clamp:2;
+	.over_two_lines {
+		display: -webkit-box;
+		word-break: break-all;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: pre-line;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
 	}
+
 	.news-info {
 		display: flex;
 		justify-content: center;
 		background-color: #F7F7F7;
 		height: 193rpx;
 		font-size: 30rpx;
+
 		.news-info-inner {
 			background-color: #ffffff;
 			height: 141rpx;
@@ -117,33 +116,35 @@
 			flex-direction: column;
 			justify-content: center;
 			border-radius: 20rpx;
-			.n-left{
+
+			.n-left {
 				display: flex;
 				justify-content: center;
-				.n-tips{
-					color: #FC5C5B; 
+
+				.n-tips {
+					color: #FC5C5B;
 					margin-left: 10rpx;
 					margin-top: 20rpx;
 				}
 			}
-			.n-right{
+
+			.n-right {
 				color: #666666;
 				padding-top: 5rpx;
 				padding-right: 10rpx;
 			}
 		}
 	}
+
 	.message-list-item {
 		min-height: 100rpx;
 		display: flex;
 		justify-content: space-between;
 		padding: 40rpx;
-		border-bottom: 1px solid #999999;
+		border-bottom: 1px solid #ccc;
 	}
 
-	.message-list-item-left {
-		
-	}
+	.message-list-item-left {}
 
 	.message-list-item-right {
 		display: flex;
@@ -159,7 +160,7 @@
 
 		.message-list-item-right-small-text {
 			display: flex;
-			font-size: 30rpx;
+			font-size: 24rpx;
 			color: #999999;
 
 			.text {

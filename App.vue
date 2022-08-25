@@ -13,6 +13,9 @@
 		},
 		onHide: function() {
 			console.log('App Hide')
+		},
+		globalData: {
+			appName: '蚁讯云'
 		}
 	}
 </script>
@@ -94,7 +97,8 @@
 		height: 0;
 		overflow: scroll;
 	}
-	.u-popup .u-transition{
+
+	.u-popup .u-transition {
 		z-index: 99999999 !important;
 	}
 </style>

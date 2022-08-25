@@ -4,7 +4,7 @@
 			"path": "pages/home/home",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor": "#00aaff",
 				"app-plus": { // 隐藏系统导航栏
@@ -24,22 +24,20 @@
 
 		},
 		{
-		    "path" : "components/vol-list/detail/detail",
-		    "style" :                                                                                    
-		    {
-		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false
-		    }
-		    
+			"path": "components/vol-list/detail/detail",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		},
 		{
-		    "path" : "components/vol-list/search-list/search-list",
-		    "style" :                                                                                    
-		    {
-		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false
-		    }
-		    
+			"path": "components/vol-list/search-list/search-list",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true
+			}
+
 		},
 		{
 			"path": "pages/user/user",
@@ -64,7 +62,7 @@
 					"titleNView": false
 				}
 			}
-		
+
 		},
 		{
 			"path": "pages/user/modifyPwd/modifyPwd",
@@ -84,7 +82,7 @@
 					"titleNView": false
 				}
 			}
-		
+
 		}
 	],
 	// "tabBar": { //设置要与第一个pages的path相同
@@ -105,10 +103,11 @@
 	// },
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "蚁讯云",
 		"navigationBarBackgroundColor": "#00aaff",
 		"navigationBarTextStyle": "white",
-		"backgroundColor": "#FFFFFF"
+		"backgroundColor": "#FFFFFF",
+		"onReachBottomDistance": 50
 	},
 	"easycom": {
 		"autoscan": true,
@@ -120,14 +119,12 @@
 
 		}
 	},
-	"condition" : { //模式配置，仅开发期间生效
+	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [
-			{
-				"name": "", //模式名称
-				"path": "", //启动页面，必选
-				"query": "" //启动参数，在页面的onLoad函数里面得到
-			}
-		]
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
 	}
 }

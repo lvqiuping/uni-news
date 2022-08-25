@@ -1,22 +1,22 @@
 <template>
 	<view class="page-container">
 		<view class="title-info">
-			<view class="t-title over_two_lines">{{data.title}}</view>
+			<view class="t-title over_two_lines">{{newsInfo.title}}</view>
 			<view class="t-tips">
-				<text class="t-user"></text>
-				<text>{{data.create_time}}</text>
+				<text class="t-user">{{ appName }}</text>
+				<text>{{newsInfo.create_time}}</text>
 			</view>
 		</view>
 		<view class="content-info">
 			<view class="text_indent_two c-content">
-				<view v-html="unescapeEntity(data.content)"></view>
+				<u-parse :content="newsInfo.content"></u-parse>
 			</view>
 			<view class="c-bottom">
 				<view class="grid-list">
 					<view class="grid-item" @click="gridClick(item.value, index, item.name)"
 						v-for="(item,index) in iconList" :key="index">
 						<view class="grid-icon">
-							<u-button :open-type="item.openType">
+							<u-button :open-type="item.openType" color="hsla(0, 100%, 50%, 0)">
 								<u-icon :color="item.color" size="22" :name="item.icon"></u-icon>
 							</u-button>
 						</view>
@@ -25,7 +25,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="c-count">阅读 <text>{{data.read_count}}</text></view>
+				<view class="c-count">阅读 <text>{{newsInfo.read_count}}</text></view>
 			</view>
 		</view>
 		<view class="footer-info">
@@ -63,13 +63,14 @@
 </template>
 
 <script>
+	const app = getApp()
 	export default {
 		data() {
 			return {
+				appName: '',
 				addComment: false,
 				loading: true,
 				collect: false,
-				data: {},
 				newsInfo: {},
 				iconList: [{
 					name: "分享",
@@ -110,15 +111,16 @@
 			// must return custom share data when user share.
 			return {
 				title: '吕秋萍',
-				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.$store.state.userInfo.openid,
+				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.$store.state
+					.userInfo.openid,
 				success(res) {
 					console.log('分享成功', res)
 				},
-				fail(res){
+				fail(res) {
 					console.log('分享失败', res)
 				}
 			}
-			
+
 		},
 		// 分享到朋友圈，加上这个上面微信自带的按钮才会能选择
 		onShareTimeline: function() {
@@ -136,6 +138,7 @@
 				title: option.title
 			})
 
+			this.appName = app.globalData.appName
 			that.newsInfo.id = option.id
 		},
 		onShow() {
@@ -145,10 +148,11 @@
 			}
 			// 初始化新闻内容
 			that.http.get("/News/read", params).then(result => {
-					that.data = Object.assign({}, that.data, result.data);
+					result.data.content = this.unescapeEntity(result.data.content)
+					that.newsInfo = Object.assign({}, that.newsInfo, result.data);
 					that.loading = false;
 				}),
-			that.getList();
+				that.getList();
 			that.gridClick('read_count'); // 进入页面就加一次阅读量
 		},
 		methods: {
@@ -168,7 +172,6 @@
 			support(id) {
 				var that = this
 				let params = {
-					openid: that.newsInfo.openid,
 					id: id
 				}
 				that.http.get("/NewsComments/setInc", params).then(result => {

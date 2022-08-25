@@ -3,7 +3,7 @@
 		<view class="user-info">
 			<view class="u-left">
 				<image class="u-img" :src="userInfo.header_img"></image>
-				<view class="u-title">{{userInfo.nickname}}</view>
+				<view class="u-title">{{ appName }}</view>
 			</view>
 			<view class="u-right">
 				<u-search placeholder="请输入新闻标题" v-model="searchWord" :showAction=fasle @search="search"></u-search>
@@ -27,9 +27,8 @@
 			</view>
 			<view class="t-list">
 				<u-skeleton rows="3" :loading="loading" avatar :title="false">
-					<u-list :height="height" :lowerThreshold='50'>
-						<message-list :list="list[index]"></message-list>
-					</u-list>
+					<message-list :list="list[tabIndex]"></message-list>
+					<u-list :height="height" :lowerThreshold='50'></u-list>
 				</u-skeleton>
 			</view>
 		</view>
@@ -38,6 +37,7 @@
 
 <script>
 	import messagelist from '@/components/vol-list/message-list.vue'
+	const app = getApp()
 	export default {
 		components: {
 			'message-list': messagelist
@@ -46,14 +46,22 @@
 			return {
 				tabsTitle: [],
 				list: [],
-				height: 0,
+				height: 50,
 				cid0: 0,
 				userInfo: {},
 				searchWord: '',
-				index: 0
+				tabIndex: 0,
+				page: 1,
+				limit: 10,
+				hasMore: true,
+				appName: ''
 			}
 		},
-
+		watch: {
+			page(v) {
+				// this.getList(this.tabsTitle[this.tabIndex].id)
+			}
+		},
 		onLoad() {
 			var that = this;
 			uni.getSystemInfo({ // 获取手机状态栏高度
@@ -61,6 +69,7 @@
 					that.height = data.statusBarHeight;
 				}
 			})
+			this.appName = app.globalData.appName
 
 			that.getNav();
 		},
@@ -69,6 +78,27 @@
 			uni.hideTabBar({
 				animation: false
 			})
+		},
+		onShareAppMessage() {
+
+		},
+		onShareTimeline() {
+
+		},
+		onReachBottom(e) {
+			if (!this.hasMore) {
+				uni.showToast({
+					title: '没有更多数据'
+				})
+
+				return false
+			}
+			this.getList()
+		},
+		onPullDownRefresh(e) {
+			console.log('pulldown', e)
+			this.list[this.tabIndex] = []
+			this.getList()
 		},
 		methods: {
 			search() {
@@ -89,30 +119,37 @@
 				})
 			},
 			tabsClick(v) {
-				this.index = v.index
-				this.getList(v.id);
+				this.tabIndex = v.index
+
+				if (!this.list[this.tabIndex]) {
+					this.getList()
+				}
 			},
 			// 获取列表写进list
 			getList(cid) {
-				var that = this;
+				var that = this
 				let params = {
-					cid: cid
+					cid: this.tabsTitle[this.tabIndex].id,
+					page: this.page,
+					limit: this.limit
 				}
 				that.http.get("/News/index", params).then(result => {
-					console.log(result)
-					let c = that.list[that.index]
-					console.log('c', c)
-					if (c) {
-						c.concat(result.data)
+					if (that.limit === result.data.length) {
+						++that.page
 					} else {
-						that.$set(that.list, that.index, result.data)
+						that.hasMore = false
 					}
 
-					console.log('list', that.list[that.index])
+					let c = that.list[that.tabIndex]
+					if (c) {
+						that.$set(that.list, that.tabIndex, c.concat(result.data))
+					} else {
+						that.$set(that.list, that.tabIndex, result.data)
+					}
 				})
 			},
 			tabsChange(v) {
-				console.log(v)
+				// console.log(v)
 			}
 		}
 	}

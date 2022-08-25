@@ -21,8 +21,7 @@
 					success: (res) => {
 						if (res.confirm) {
 							this.wechatLogin()
-						} else if (res.cancel) {
-						}
+						} else if (res.cancel) {}
 
 					},
 
@@ -55,12 +54,11 @@
 										.then((result) => {
 											if (result.code != 1) {
 												that.loading = false;
-												return that.$toast(result.msg);
+												return that.$toast(result.msg)
 											}
-											that.$toast("登录成功,正在跳转!");
-											console.log(result)
+											// that.$toast("登录成功,正在跳转!")
 											uni.setStorageSync('userInfo', result.data)
-											uni.switchTab({
+											uni.navigateTo({
 												url: "/pages/home/home"
 											})
 										});
