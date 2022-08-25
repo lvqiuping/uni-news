@@ -1,26 +1,28 @@
 <template>
-	<view>
-		<view style="margin: .5rem 0">
+	<view style="padding: 20rpx;">
+		<view style="margin-bottom: .5rem">
 			<u-search placeholder="请输入新闻标题" v-model="title" :showAction=fasle @search="search"></u-search>
 		</view>
 		<block v-if="searchData.length > 0">
-			<view @click="toDetail(item)" class="message-list-item" v-for="(item, index) in searchData" :key="index">
-				<view class="message-list-item-right">
-					<view class="message-list-item-right-title over_two_lines">
-						{{ item.title }}
-					</view>
-					<view class="message-list-item-right-small-text">
-						<view style="margin-right: 30rpx;">阅读 {{ item.read_count }}</view>
-						<view></view>
-					</view>
-				</view>
-				<view class="message-list-item-left">
-					<u--image width="80px" height="80px" radius="15px" :src="item.cover_img"></u--image>
-				</view>
+			<view v-for="(item, index) in searchData" style="padding-bottom: 10px;" :key="index">
+				<u-row justify="space-between" gutter="10" @click="toDetail(item)">
+					<u-col span="9">
+						<u--text lines="2" :text="item.title" bold :margin="{ bottom: 16 }" style="margin-bottom: 16px">
+						</u--text>
+						<u--text type="info" size="12" block :text="'阅读 ' + item.read_count"></u--text>
+					</u-col>
+					<u-col span="3" justify="end">
+						<u--image width="80px" height="80px" radius="15px" :src="item.cover_img || ''"></u--image>
+					</u-col>
+				</u-row>
 			</view>
 		</block>
 		<block v-else>
-			<u-empty mode="data"></u-empty>
+			<u-row gutter="10">
+				<u-col span="12">
+					<u-empty mode="data"></u-empty>
+				</u-col>
+			</u-row>
 		</block>
 	</view>
 </template>

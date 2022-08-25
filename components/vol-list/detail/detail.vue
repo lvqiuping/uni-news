@@ -1,10 +1,18 @@
 <template>
 	<view class="page-container">
-		<view class="title-info">
-			<view class="t-title over_two_lines">{{newsInfo.title}}</view>
-			<view class="t-tips">
-				<text class="t-user">{{ appName }}</text>
-				<text>{{newsInfo.create_time}}</text>
+		<view>
+			<view class="t-title over_two_lines">
+				<u--text size="20" :text="newsInfo.title" bold></u--text>
+			</view>
+			<view>
+				<u-row gutter="10" justify="space-between">
+					<u-col span="4">
+						<text class="t-user">{{ appName }}</text>
+					</u-col>
+					<u-col span="8">
+						<text>{{newsInfo.create_time}}</text>
+					</u-col>
+				</u-row>
 			</view>
 		</view>
 		<view class="content-info">
@@ -282,13 +290,13 @@
 	}
 
 	.page-container {
-		margin: 20rpx 40rpx;
+		padding: 10rpx 20rpx;
 		height: calc(100vh - 110rpx);
 		overflow: scroll;
 		color: #333333;
 
 		.title-info {
-			font-size: 60rpx;
+			font-size: 40rpx;
 
 			.t-title {
 				text-align: center;

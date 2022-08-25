@@ -1,37 +1,42 @@
 <template>
-	<view :style="{height:height+50+'px'}">
-		<view class="user-info">
-			<view class="u-left">
-				<image class="u-img" :src="userInfo.header_img"></image>
-				<view class="u-title">{{ appName }}</view>
-			</view>
-			<view class="u-right">
+	<view style="min-height: 100vh; padding: 10rpx">
+		<u-row justify="space-between" gutter="10">
+			<u-col span="4">
+				<u-row justify="space-between">
+					<u-col span="12">
+						<u--image class="" :src="logo" width="65" height="40"></u--image>
+					</u-col>
+					<!-- <u-col span="6">
+						<view class="">{{ appName }}</view>
+					</u-col> -->
+				</u-row>
+			</u-col>
+			<u-col span="8">
 				<u-search placeholder="请输入新闻标题" v-model="searchWord" :showAction=fasle @search="search"></u-search>
-			</view>
+			</u-col>
+		</u-row>
+
+		<view style="margin-bottom: 12px">
+			<u-sticky bgColor="#fff">
+				<u-tabs :list="tabsTitle" lineColor="#f56c6c" :current="index" :activeStyle="{
+								            color: '#Fc5c5b',
+								            fontWeight: 'bold',
+											fontSize: '30rpx',
+								            transform: 'scale(1.05)'
+								        }" :inactiveStyle="{
+								            color: '#606266',
+											fontSize: '30rpx',
+								            transform: 'scale(1)'
+								        }" itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;" @click="tabsClick"
+					@change="tabsChange" />
+			</u-sticky>
 		</view>
-		<view class="tabs-info">
-			<view class="t-title">
-				<u-sticky bgColor="#fff">
-					<u-tabs :list="tabsTitle" lineColor="#f56c6c" :current="index" :activeStyle="{
-						            color: '#Fc5c5b',
-						            fontWeight: 'bold',
-									fontSize: '30rpx',
-						            transform: 'scale(1.05)'
-						        }" :inactiveStyle="{
-						            color: '#606266',
-									fontSize: '30rpx',
-						            transform: 'scale(1)'
-						        }" itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;" @click="tabsClick"
-						@change="tabsChange" />
-				</u-sticky>
-			</view>
-			<view class="t-list">
-				<u-skeleton rows="3" :loading="loading" avatar :title="false">
-					<message-list :list="list[tabIndex]"></message-list>
-					<u-list :height="height" :lowerThreshold='50'></u-list>
-				</u-skeleton>
-			</view>
-		</view>
+
+		<u-row justify="space-between">
+			<u-col span="12">
+				<message-list :list="list[tabIndex]"></message-list>
+			</u-col>
+		</u-row>
 	</view>
 </template>
 
@@ -46,7 +51,7 @@
 			return {
 				tabsTitle: [],
 				list: [],
-				height: 50,
+				height: 0,
 				cid0: 0,
 				userInfo: {},
 				searchWord: '',
@@ -54,7 +59,8 @@
 				page: 1,
 				limit: 10,
 				hasMore: true,
-				appName: ''
+				appName: '',
+				logo: '/static/imgs/logo.png'
 			}
 		},
 		watch: {
@@ -155,39 +161,4 @@
 	}
 </script>
 <style lang="less" scoped>
-	.user-info {
-		margin: 40rpx 20rpx 20rpx;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-
-		.u-left {
-			display: flex;
-			flex-direction: row;
-			justify-content: left;
-			align-items: center;
-
-			.u-img {
-				width: 85rpx;
-				height: 85rpx;
-				border-radius: 50%;
-				border: 2rpx solid #FFFFFF;
-				margin-right: 10rpx;
-			}
-
-			.u-title {
-				font-size: 50rpx;
-				color: #333333;
-				white-space: nowrap;
-			}
-		}
-
-		.u-right {}
-	}
-
-	.tabs-info {
-		.t-title {
-			margin: 0 0 20rpx 0;
-		}
-	}
 </style>

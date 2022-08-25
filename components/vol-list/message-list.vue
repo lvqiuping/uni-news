@@ -1,49 +1,57 @@
 <template>
-	<view>
-		<view class="swiper-info">
-			<u-swiper height="538rpx" :list="swiperList" :radius="0" indicator indicatorMode="dot" circular
-				indicatorActiveColor="#FC5C5B" />
+	<block>
+		<view style="margin-bottom: 10px;">
+			<u-row justify="space-between">
+				<u-col span="12">
+					<u-swiper :list="swiperList" :radius="0" indicator indicatorMode="dot" circular
+						indicatorActiveColor="#FC5C5B" />
+				</u-col>
+			</u-row>
 		</view>
-		<!-- <view class="news-info">
-			<view class="news-info-inner">
-				<u-row>
-					<u-col span="4">
-						<view class="n-left">
-							<u--image width="80rpx" height="80rpx" :src="localImage1"></u--image>
-							<view class="n-tips">快讯</view>
-						</view>
-					</u-col>
-					<u-col span="8">
-						<view class="n-right over_two_lines"></view>
-					</u-col>
-				</u-row>
-
-			</view>
-		</view> -->
+		<u-row justify="space-between" style="margin-bottom: 10px;">
+			<u-col span="12">
+				<!-- <view class="news-info">
+							<view class="news-info-inner">
+								<u-row>
+									<u-col span="4">
+										<view class="n-left">
+											<u--image width="80rpx" height="80rpx" :src="localImage1"></u--image>
+											<view class="n-tips">快讯</view>
+										</view>
+									</u-col>
+									<u-col span="8">
+										<view class="n-right over_two_lines"></view>
+									</u-col>
+								</u-row>
+						
+							</view>
+						</view> -->
+			</u-col>
+		</u-row>
 
 		<block v-if="list.length > 0">
-			<view @click="toDetail(item)" class="message-list-item" v-for="(item, index) in list" :key="index">
-				<view class="message-list-item-right">
-					<view class="message-list-item-right-title over_two_lines">
-						{{ item.title }}
-					</view>
-					<!-- <view class="message-list-item-right-small-text" v-if="index === 0">
-					<u-tag text="置顶" type="error" shape="circle" size="large"></u-tag>
-				</view> -->
-					<view class="message-list-item-right-small-text u-line-2">
-						<view style="margin-right: 30rpx;">阅读 {{ item.read_count }}</view>
-						<view></view>
-					</view>
-				</view>
-				<view class="message-list-item-left">
-					<u--image width="80px" height="80px" radius="15px" :src="item.cover_img"></u--image>
-				</view>
+			<view v-for="(item, index) in list" style="padding-bottom: 10px;" :key="index">
+				<u-row justify="space-between" gutter="10" @click="toDetail(item)">
+					<u-col span="9">
+						<u--text lines="2" :text="item.title" bold :margin="{ bottom: 16 }" style="margin-bottom: 16px">
+						</u--text>
+						<u--text type="info" size="12" block :text="'阅读 ' + item.read_count"></u--text>
+					</u-col>
+					<u-col span="3" justify="end">
+						<u--image width="80px" height="80px" radius="15px" :src="item.cover_img || ''"></u--image>
+					</u-col>
+				</u-row>
 			</view>
 		</block>
 		<block v-else>
-			<u-empty mode="data"></u-empty>
+			<u-row gutter="10">
+				<u-col span="12">
+					<u-empty mode="data"></u-empty>
+				</u-col>
+			</u-row>
 		</block>
-	</view>
+	</block>
+
 </template>
 
 <script>
@@ -66,16 +74,7 @@
 		},
 		created() {},
 		// #ifdef MP-WEIXIN
-		watch: {
-			// list: {
-			// 	handler(val) {
-			// 		// console.log('val', val)
-			// 		// this.newsList = val;
-			// 	},
-			// 	immediate: true,
-			// 	deep: true
-			// }
-		},
+		watch: {},
 		// #endif
 		methods: {
 			toDetail(item) {
@@ -90,96 +89,4 @@
 	}
 </script>
 <style lang="less" scoped>
-	.over_two_lines {
-		display: -webkit-box;
-		word-break: break-all;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: pre-line;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-	}
-
-	.news-info {
-		display: flex;
-		justify-content: center;
-		background-color: #F7F7F7;
-		height: 193rpx;
-		font-size: 30rpx;
-
-		.news-info-inner {
-			background-color: #ffffff;
-			height: 141rpx;
-			width: 96%;
-			margin: auto;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			border-radius: 20rpx;
-
-			.n-left {
-				display: flex;
-				justify-content: center;
-
-				.n-tips {
-					color: #FC5C5B;
-					margin-left: 10rpx;
-					margin-top: 20rpx;
-				}
-			}
-
-			.n-right {
-				color: #666666;
-				padding-top: 5rpx;
-				padding-right: 10rpx;
-			}
-		}
-	}
-
-	.message-list-item {
-		min-height: 100rpx;
-		display: flex;
-		justify-content: space-between;
-		padding: 40rpx;
-		border-bottom: 1px solid #ccc;
-	}
-
-	.message-list-item-left {}
-
-	.message-list-item-right {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-
-		.message-list-item-right-title {
-			font-size: 40rpx;
-			color: #333333;
-			margin-bottom: 20rpx;
-			margin-right: 20rpx;
-		}
-
-		.message-list-item-right-small-text {
-			display: flex;
-			font-size: 24rpx;
-			color: #999999;
-
-			.text {
-				flex: 1;
-			}
-
-			.text:last-child {
-				text-align: right;
-			}
-
-			.flag {
-				padding: 1px 5px;
-				border-radius: 3px;
-				font-size: 20rpx;
-				background: #f44336;
-				color: #ffff;
-				position: relative;
-				top: -2px;
-			}
-		}
-	}
 </style>

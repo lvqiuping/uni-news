@@ -9,8 +9,8 @@
 				"navigationBarBackgroundColor": "#00aaff",
 				"app-plus": { // 隐藏系统导航栏
 					"titleNView": false
-				},
-				"navigationStyle": "custom" //添加自定义配置
+				}
+				// "navigationStyle": "custom" //添加自定义配置
 			}
 		},
 		{
