@@ -33,7 +33,7 @@
 			<view v-for="(item, index) in list" style="padding-bottom: 10px;" :key="index">
 				<u-row justify="space-between" gutter="10" @click="toDetail(item)">
 					<u-col span="9">
-						<u--text lines="2" :text="item.title" bold :margin="{ bottom: 16 }" style="margin-bottom: 16px">
+						<u--text lines="2" :text="item.title" bold margin="0 0 8px 0">
 						</u--text>
 						<u--text type="info" size="12" block :text="'阅读 ' + item.read_count"></u--text>
 					</u-col>
@@ -41,6 +41,7 @@
 						<u--image width="80px" height="80px" radius="15px" :src="item.cover_img || ''"></u--image>
 					</u-col>
 				</u-row>
+				<u-line></u-line>
 			</view>
 		</block>
 		<block v-else>

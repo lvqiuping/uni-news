@@ -6,13 +6,11 @@
 					<u-col span="12">
 						<u--image class="" :src="logo" width="65" height="40"></u--image>
 					</u-col>
-					<!-- <u-col span="6">
-						<view class="">{{ appName }}</view>
-					</u-col> -->
 				</u-row>
 			</u-col>
 			<u-col span="8">
-				<u-search placeholder="请输入新闻标题" v-model="searchWord" :showAction=fasle @search="search"></u-search>
+				<u-search placeholder="搜索内容" v-model="searchWord" :showAction=fasle @search="search" shape="square">
+				</u-search>
 			</u-col>
 		</u-row>
 

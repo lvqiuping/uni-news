@@ -9,7 +9,7 @@
 					<u-col span="4">
 						<text class="t-user">{{ appName }}</text>
 					</u-col>
-					<u-col span="8">
+					<u-col span="8" textAlign="end">
 						<text>{{newsInfo.create_time}}</text>
 					</u-col>
 				</u-row>

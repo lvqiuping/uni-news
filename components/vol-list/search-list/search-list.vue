@@ -1,7 +1,8 @@
 <template>
 	<view style="padding: 20rpx;">
 		<view style="margin-bottom: .5rem">
-			<u-search placeholder="请输入新闻标题" v-model="title" :showAction=fasle @search="search"></u-search>
+			<u-search placeholder="搜索内容" v-model="title" :showAction=fasle @search="search" shape="square">
+			</u-search>
 		</view>
 		<block v-if="searchData.length > 0">
 			<view v-for="(item, index) in searchData" style="padding-bottom: 10px;" :key="index">
