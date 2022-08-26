@@ -32,7 +32,16 @@
 
 		<u-row justify="space-between">
 			<u-col span="12">
+				<view style="margin-bottom: 10px;">
+					<u-row justify="space-between">
+						<u-col span="12">
+							<u-swiper :list="swiperList" :radius="0" indicator indicatorMode="dot" circular
+								indicatorActiveColor="#FC5C5B" />
+						</u-col>
+					</u-row>
+				</view>
 				<message-list :list="list[tabIndex]"></message-list>
+				<u-loadmore v-if="!tabsTitle[tabIndex].hasMore" status="nomore" height="30"></u-loadmore>
 			</u-col>
 		</u-row>
 	</view>
@@ -47,6 +56,11 @@
 		},
 		data() {
 			return {
+				swiperList: [
+					'/static/swiper1.png',
+					'/static/swiper2.png',
+					'/static/swiper3.png'
+				],
 				tabsTitle: [],
 				list: [],
 				height: 0,
@@ -54,9 +68,7 @@
 				userInfo: {},
 				searchWord: '',
 				tabIndex: 0,
-				page: 1,
-				limit: 10,
-				hasMore: true,
+				limit: 2,
 				appName: '',
 				logo: '/static/imgs/logo.png'
 			}
@@ -79,9 +91,9 @@
 		},
 		onShow() {
 			this.userInfo = uni.getStorageSync('userInfo')
-			uni.hideTabBar({
-				animation: false
-			})
+			// uni.hideTabBar({
+			// 	animation: false
+			// })
 		},
 		onShareAppMessage() {
 
@@ -90,17 +102,17 @@
 
 		},
 		onReachBottom(e) {
-			if (!this.hasMore) {
-				uni.showToast({
-					title: '没有更多数据'
-				})
+			console.log(this.tabsTitle[this.tabIndex])
+			if (!this.tabsTitle[this.tabIndex].hasMore) {
+				// uni.showToast({
+				// 	title: '没有更多数据'
+				// })
 
 				return false
 			}
 			this.getList()
 		},
 		onPullDownRefresh(e) {
-			console.log('pulldown', e)
 			this.list[this.tabIndex] = []
 			this.getList()
 		},
@@ -116,7 +128,9 @@
 					result.data.forEach((item) => {
 						that.tabsTitle.push({
 							name: item.title,
-							id: item.id
+							id: item.id,
+							hasMore: true,
+							page: 1
 						}) // 框架需要的格式
 					})
 					that.getList(result.data[0].id)
@@ -134,14 +148,15 @@
 				var that = this
 				let params = {
 					cid: this.tabsTitle[this.tabIndex].id,
-					page: this.page,
+					page: this.tabsTitle[this.tabIndex].page,
 					limit: this.limit
 				}
 				that.http.get("/News/index", params).then(result => {
 					if (that.limit === result.data.length) {
-						++that.page
+						++that.tabsTitle[that.tabIndex].page
 					} else {
-						that.hasMore = false
+						that.tabsTitle[that.tabIndex].hasMore = false
+						that.$set(that.tabsTitle, that.index, that.tabsTitle[that.tabIndex])
 					}
 
 					let c = that.list[that.tabIndex]

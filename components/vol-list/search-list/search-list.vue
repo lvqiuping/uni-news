@@ -4,32 +4,17 @@
 			<u-search placeholder="搜索内容" v-model="title" :showAction=fasle @search="search" shape="square">
 			</u-search>
 		</view>
-		<block v-if="searchData.length > 0">
-			<view v-for="(item, index) in searchData" style="padding-bottom: 10px;" :key="index">
-				<u-row justify="space-between" gutter="10" @click="toDetail(item)">
-					<u-col span="9">
-						<u--text lines="2" :text="item.title" bold :margin="{ bottom: 16 }" style="margin-bottom: 16px">
-						</u--text>
-						<u--text type="info" size="12" block :text="'阅读 ' + item.read_count"></u--text>
-					</u-col>
-					<u-col span="3" justify="end">
-						<u--image width="80px" height="80px" radius="15px" :src="item.cover_img || ''"></u--image>
-					</u-col>
-				</u-row>
-			</view>
-		</block>
-		<block v-else>
-			<u-row gutter="10">
-				<u-col span="12">
-					<u-empty mode="data"></u-empty>
-				</u-col>
-			</u-row>
-		</block>
+
+		<message-list :list="searchData"></message-list>
 	</view>
 </template>
 
 <script>
+	import messageList from '@/components/vol-list/message-list.vue'
 	export default {
+		components: {
+			messageList
+		},
 		data() {
 			return {
 				title: '',
@@ -44,13 +29,6 @@
 			that.title = option.title
 			that.getList()
 		},
-		// #ifdef MP-WEIXIN
-		watch: {
-			title(v) {
-				// this.getList()
-			}
-		},
-		// #endif
 		onReachBottom(e) {
 			if (!this.hasMore) {
 				uni.showToast({
