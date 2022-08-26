@@ -39,19 +39,19 @@
 			}
 
 		},
-		{
-			"path": "pages/user/user",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false,
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "#00aaff",
-				"app-plus": { // 隐藏系统导航栏
-					"titleNView": false
-				},
-				"navigationStyle": "custom" //添加自定义配置
-			}
-		},
+		// {
+		// 	"path": "pages/user/user",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"enablePullDownRefresh": false,
+		// 		"navigationBarTextStyle": "white",
+		// 		"navigationBarBackgroundColor": "#00aaff",
+		// 		"app-plus": { // 隐藏系统导航栏
+		// 			"titleNView": false
+		// 		},
+		// 		"navigationStyle": "custom" //添加自定义配置
+		// 	}
+		// },
 		{
 			"path": "pages/phone/phone",
 			"style": {
@@ -61,14 +61,6 @@
 				"app-plus": { // 隐藏系统导航栏
 					"titleNView": false
 				}
-			}
-
-		},
-		{
-			"path": "pages/user/modifyPwd/modifyPwd",
-			"style": {
-				"navigationBarTitleText": "修改密码",
-				"enablePullDownRefresh": false
 			}
 
 		},
