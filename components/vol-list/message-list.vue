@@ -107,7 +107,6 @@
 				} else if (e.detail.errMsg === 'getPhoneNumber:fail user deny') {
 					console.log('拒绝获得手机号')
 				}
-
 			}
 		}
 	}

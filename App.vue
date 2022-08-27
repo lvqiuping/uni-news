@@ -8,8 +8,11 @@
 				})
 			}
 		},
-		onShow: function() {
+		onShow: function(options) {
 			console.log('App Show')
+			// 分享进入不会触发onLaunch ，所以在app.js 的onshow中 判断来源执行操作
+			console.log('分享进入不会触发onLaunch', options)
+			
 		},
 		onHide: function() {
 			console.log('App Hide')

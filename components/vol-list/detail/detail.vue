@@ -141,6 +141,7 @@
 
 		},
 		onLoad(option) {
+			console.log('option', option)
 			var that = this;
 			uni.setNavigationBarTitle({
 				title: option.title
