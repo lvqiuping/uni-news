@@ -81,7 +81,11 @@
 					title: item.title
 				})
 				const userInfo = uni.getStorageSync('userInfo')
+<<<<<<< HEAD
 				if (!userInfo.phone) {
+=======
+				if(!userInfo.phone){
+>>>>>>> 17bc2e05b7bc1be8bf87cdd92a04939732272948
 					this.show = true
 					return
 				}
