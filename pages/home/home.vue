@@ -67,7 +67,7 @@
 				userInfo: {},
 				searchWord: '',
 				tabIndex: 0,
-				limit: 2,
+				limit: 10,
 				appName: '',
 				logo: '/static/imgs/logo.png'
 			}
