@@ -166,7 +166,6 @@
 			uni.setNavigationBarTitle({
 				title: option.title
 			})
-
 			this.appName = app.globalData.appName
 			that.newsInfo.id = option.id
 		},

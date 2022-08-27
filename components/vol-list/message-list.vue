@@ -22,6 +22,26 @@
 				</u-col>
 			</u-row>
 		</block>
+		<u-popup :show="show" mode="bottom" :round="10" closeable="true" @close="close" @open="open">
+		<view class="slot-boxs">
+			<view class="tips">
+				是否确定继续前往查看更多内容？
+			</view>
+			   <view class="slot-content">
+			   <view class="but1">
+				   <u-button type="info" @click="cancel">
+				   	取消
+				   </u-button>
+			   </view>
+			     <view class="but1">
+					 <u-button type="primary" openType="getPhoneNumber" @getphonenumber="getPhoneNumber" class="but1">
+					 	确定
+					 </u-button>
+			     </view>
+			   
+			   </view>
+		</view>
+			</u-popup>
 	</block>
 </template>
 
@@ -33,17 +53,80 @@
 				default: () => []
 			}
 		},
+		data() {
+			return {
+				show: false,
+			};
+		},
 		methods: {
+			open() {
+				// console.log('1')
+			},
+			close() {
+				this.show = false
+				return
+			},
+			cancel() {
+				this.show = false
+				return
+			},
 			toDetail(item) {
 				const userInfo = uni.getStorageSync('userInfo')
-				const url = !userInfo.phone ? '/pages/phone/phone' : '/components/vol-list/detail/detail?id=' + item.id +
-					"&title=" + item.title
+				if(!userInfo.phone){
+					this.show = true
+					return
+				}
+				// const url = !userInfo.phone ? '/pages/phone/phone' : '/components/vol-list/detail/detail?id=' + item.id +
+				// 	"&title=" + item.title
+				const url = '/components/vol-list/detail/detail?id=' + item.id + "&title=" + item.title
 				uni.navigateTo({
 					url: url
 				})
+			},
+			getPhoneNumber(e) {
+				this.show = false
+				if (e.detail.errMsg === 'getPhoneNumber:ok') {
+					this.http.post('/User/getUserPhoneNumber', {
+						code: e.detail.code
+					}).then(res => {
+						if (res.code === 1) {
+							const userInfo = uni.getStorageSync('userInfo')
+							userInfo.phone = res.data.phoneNumber
+							uni.setStorageSync('userInfo', userInfo)
+							uni.switchTab({
+								url: "/pages/home/home"
+							})
+						}
+					})
+				} else if (e.detail.errMsg === 'getPhoneNumber:fail user deny') {
+					console.log('拒绝获得手机号')
+				}
+
 			}
 		}
 	}
 </script>
 <style lang="less" scoped>
+	.slot-boxs{
+		height: 350rpx;
+		padding: 20rpx;
+	}
+	.tips{
+		color: rgba(0, 0, 0, .6);
+		padding: 20rpx;
+		margin-bottom: 60rpx;
+		
+	}
+	.slot-content {
+		   display: flex;
+		   flex-direction: row;
+		   justify-content: center;
+		   align-items: center;			
+	}
+	.but1{
+		width: 28%;
+		margin-right: 30rpx;
+		padding-bottom: 40rpx;
+		
+	}
 </style>
