@@ -16,7 +16,7 @@
 
 		<view style="margin-bottom: 12px">
 			<u-sticky bgColor="#fff">
-				<u-tabs :list="tabsTitle" lineColor="#f56c6c" :current="index" :activeStyle="{
+				<u-tabs :list="tabsTitle" lineColor="#f56c6c" :current="tabIndex" :activeStyle="{
 								            color: '#Fc5c5b',
 								            fontWeight: 'bold',
 											fontSize: '30rpx',

@@ -16,25 +16,46 @@
 			</view>
 		</view>
 		<view class="content-info">
-			<view class="text_indent_two c-content" style="font-size: 13px; line-height: 1.5;">
-				<u-parse :content="newsInfo.content"></u-parse>
-			</view>
-			<view class="c-bottom">
-				<view class="grid-list">
-					<view class="grid-item" @click="gridClick(item.value, index, item.name)"
-						v-for="(item,index) in iconList" :key="index">
-						<view class="grid-icon">
-							<u-button :open-type="item.openType" color="hsla(0, 100%, 50%, 0)">
-								<u-icon :color="item.color" size="22" :name="item.icon"></u-icon>
-							</u-button>
-						</view>
-						<view class="grid-text">
-							{{item.name}}
-						</view>
+			<u-row>
+				<u-col span="12">
+					<view style="font-size: 14px; line-height: 1.5;">
+						<u-parse :content="newsInfo.content"></u-parse>
 					</view>
-				</view>
-				<view class="c-count">阅读 <text>{{newsInfo.read_count}}</text></view>
-			</view>
+				</u-col>
+			</u-row>
+			<u-row gutter="10" style="height: 56px;">
+				<u-col span="8">
+					<u-row gutter="10">
+						<u-col span="4" v-for="(item, index) in iconList" :key="index"
+							@click="gridClick(item.value, index, item.name)">
+							<u-row justify="space-between" gutter="10">
+								<u-col span="12">
+									<button :open-type="item.openType" class="u-reset-button"
+										style="width: 24px; height: 24px; background: transparent; border: none">
+										<u-icon :color="item.color" size="20" :name="item.icon"></u-icon>
+									</button>
+								</u-col>
+								<u-col span="12">
+									<u--text type="info" size="13" :text="item.name"></u--text>
+								</u-col>
+							</u-row>
+						</u-col>
+					</u-row>
+				</u-col>
+				<u-col span="4">
+					<u-row>
+						<u-col span="12">
+							<button class="u-reset-button"
+								style="width: 24px; height: 24px; background: transparent; border: none">
+								<u-icon size="20" name="eye"></u-icon>
+							</button>
+						</u-col>
+						<u-col span="12">
+							<u--text type="info" size="13" :text="newsInfo.read_count"></u--text>
+						</u-col>
+					</u-row>
+				</u-col>
+			</u-row>
 		</view>
 		<view class="footer-info">
 			<view class="f-title">
@@ -275,6 +296,10 @@
 </script>
 
 <style lang="less" scoped>
+	button::after {
+		border: none;
+	}
+
 	.text_indent_two {
 		text-indent: 10rpx;
 	}
@@ -318,7 +343,8 @@
 
 		.content-info {
 			background-color: #E1EFFE;
-			margin: 27rpx 0;
+			padding: 20rpx;
+			margin: 20rpx 0;
 
 			.c-title {
 				color: #333333;
