@@ -1,22 +1,22 @@
 <template>
 	<view class="page-container">
 		<view>
-			<view class="t-title over_two_lines">
-				<u--text size="20" :text="newsInfo.title" bold></u--text>
+			<view>
+				<u--text size="18" :text="newsInfo.title" bold margin="0 0 10px"></u--text>
 			</view>
 			<view>
 				<u-row gutter="10" justify="space-between">
 					<u-col span="4">
-						<text class="t-user">{{ appName }}</text>
+						<u--text type="info" size="12" :text="appName"></u--text>
 					</u-col>
 					<u-col span="8" textAlign="end">
-						<text>{{newsInfo.create_time}}</text>
+						<u--text type="info" size="12" :text="newsInfo.create_time" align="right"></u--text>
 					</u-col>
 				</u-row>
 			</view>
 		</view>
 		<view class="content-info">
-			<view class="text_indent_two c-content">
+			<view class="text_indent_two c-content" style="font-size: 13px; line-height: 1.5;">
 				<u-parse :content="newsInfo.content"></u-parse>
 			</view>
 			<view class="c-bottom">
@@ -276,7 +276,7 @@
 
 <style lang="less" scoped>
 	.text_indent_two {
-		text-indent: 20rpx;
+		text-indent: 10rpx;
 	}
 
 	.over_two_lines {
@@ -290,7 +290,7 @@
 	}
 
 	.page-container {
-		padding: 10rpx 20rpx;
+		padding: 10rpx;
 		height: calc(100vh - 110rpx);
 		overflow: scroll;
 		color: #333333;

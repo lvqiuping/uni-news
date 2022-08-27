@@ -25,8 +25,7 @@
 								            color: '#606266',
 											fontSize: '30rpx',
 								            transform: 'scale(1)'
-								        }" itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;" @click="tabsClick"
-					@change="tabsChange" />
+								        }" itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;" @click="tabsClick" />
 			</u-sticky>
 		</view>
 
@@ -73,11 +72,6 @@
 				logo: '/static/imgs/logo.png'
 			}
 		},
-		watch: {
-			page(v) {
-				// this.getList(this.tabsTitle[this.tabIndex].id)
-			}
-		},
 		onLoad() {
 			var that = this;
 			uni.getSystemInfo({ // 获取手机状态栏高度
@@ -91,9 +85,6 @@
 		},
 		onShow() {
 			this.userInfo = uni.getStorageSync('userInfo')
-			// uni.hideTabBar({
-			// 	animation: false
-			// })
 		},
 		onShareAppMessage() {
 
@@ -102,18 +93,16 @@
 
 		},
 		onReachBottom(e) {
-			console.log(this.tabsTitle[this.tabIndex])
 			if (!this.tabsTitle[this.tabIndex].hasMore) {
-				// uni.showToast({
-				// 	title: '没有更多数据'
-				// })
-
 				return false
 			}
 			this.getList()
 		},
 		onPullDownRefresh(e) {
 			this.list[this.tabIndex] = []
+			this.tabsTitle[this.tabIndex].hasMore = true
+			this.tabsTitle[this.tabIndex].page = 1
+			this.$set(this.tabsTitle, this.tabIndex, this.tabsTitle[this.tabIndex])
 			this.getList()
 		},
 		methods: {
@@ -166,9 +155,6 @@
 						that.$set(that.list, that.tabIndex, result.data)
 					}
 				})
-			},
-			tabsChange(v) {
-				// console.log(v)
 			}
 		}
 	}

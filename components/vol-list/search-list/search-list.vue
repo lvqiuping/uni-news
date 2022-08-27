@@ -6,6 +6,7 @@
 		</view>
 
 		<message-list :list="searchData"></message-list>
+		<u-loadmore v-if="!hasMore" status="nomore" height="30"></u-loadmore>
 	</view>
 </template>
 
@@ -20,23 +21,19 @@
 				title: '',
 				searchData: [],
 				page: 1,
-				limit: 10,
+				limit: 1,
 				hasMore: true
 			}
 		},
 		onLoad(option) {
-			var that = this;
-			that.title = option.title
-			that.getList()
+			this.title = option.title
+			this.getList()
 		},
 		onReachBottom(e) {
 			if (!this.hasMore) {
-				uni.showToast({
-					title: '没有更多数据'
-				})
-
 				return false
 			}
+
 			this.getList()
 		},
 		methods: {
@@ -49,23 +46,18 @@
 			// 获取列表写进list
 			getList() {
 				var that = this;
-				let params = {
+				that.http.get("/News/index", {
 					title: this.title,
 					page: this.page,
 					limit: this.limit
-				}
-				that.http.get("/News/index", params).then(result => {
+				}).then(result => {
 					if (that.limit === result.data.length) {
 						++that.page
 					} else {
 						that.hasMore = false
 					}
 
-					if (result.data.length > 0) {
-						that.searchData = that.searchData.concat(result.data)
-					} else {
-						that.searchData = result.data
-					}
+					that.searchData = that.searchData.concat(result.data)
 				})
 			},
 			toDetail(item) {
@@ -85,60 +77,4 @@
 	}
 </script>
 <style lang="less" scoped>
-	.over_two_lines {
-		display: -webkit-box;
-		word-break: break-all;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: pre-line;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-	}
-
-	.message-list-item {
-		min-height: 100rpx;
-		display: flex;
-		justify-content: space-between;
-		padding: 40rpx;
-		border-bottom: 1px solid #ccc;
-	}
-
-	.message-list-item-left {}
-
-	.message-list-item-right {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-
-		.message-list-item-right-title {
-			font-size: 40rpx;
-			color: #333333;
-			margin-bottom: 20rpx;
-			margin-right: 20rpx;
-		}
-
-		.message-list-item-right-small-text {
-			display: flex;
-			font-size: 30rpx;
-			color: #999999;
-
-			.text {
-				flex: 1;
-			}
-
-			.text:last-child {
-				text-align: right;
-			}
-
-			.flag {
-				padding: 1px 5px;
-				border-radius: 3px;
-				font-size: 20rpx;
-				background: #f44336;
-				color: #ffff;
-				position: relative;
-				top: -2px;
-			}
-		}
-	}
 </style>
