@@ -80,7 +80,7 @@
 					title: item.title
 				})
 				const userInfo = uni.getStorageSync('userInfo')
-				if(userInfo.phone){
+				if(!userInfo.phone){
 					this.show = true
 					return
 				}
