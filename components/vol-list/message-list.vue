@@ -23,25 +23,26 @@
 			</u-row>
 		</block>
 		<u-popup :show="show" mode="bottom" :round="10" closeable="true" @close="close" @open="open">
-		<view class="slot-boxs">
-			<view class="tips">
-				是否确定继续前往查看更多内容？
+			<view class="slot-boxs">
+				<view class="tips">
+					是否确定继续前往查看更多内容？
+				</view>
+				<view class="slot-content">
+					<view class="but1">
+						<u-button type="info" @click="cancel">
+							取消
+						</u-button>
+					</view>
+					<view class="but1">
+						<u-button type="primary" openType="getPhoneNumber" @getphonenumber="getPhoneNumber"
+							class="but1">
+							确定
+						</u-button>
+					</view>
+
+				</view>
 			</view>
-			   <view class="slot-content">
-			   <view class="but1">
-				   <u-button type="info" @click="cancel">
-				   	取消
-				   </u-button>
-			   </view>
-			     <view class="but1">
-					 <u-button type="primary" openType="getPhoneNumber" @getphonenumber="getPhoneNumber" class="but1">
-					 	确定
-					 </u-button>
-			     </view>
-			   
-			   </view>
-		</view>
-			</u-popup>
+		</u-popup>
 	</block>
 </template>
 
@@ -80,7 +81,7 @@
 					title: item.title
 				})
 				const userInfo = uni.getStorageSync('userInfo')
-				if(!userInfo.phone){
+				if (!userInfo.phone) {
 					this.show = true
 					return
 				}
@@ -100,7 +101,8 @@
 							userInfo.phone = res.data.phoneNumber
 							uni.setStorageSync('userInfo', userInfo)
 							uni.navigateTo({
-								url: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + "&title=" + this.newsInfo.title
+								url: '/components/vol-list/detail/detail?id=' + this.newsInfo.id +
+									"&title=" + this.newsInfo.title
 							})
 						}
 					})
@@ -112,26 +114,29 @@
 	}
 </script>
 <style lang="less" scoped>
-	.slot-boxs{
+	.slot-boxs {
 		height: 350rpx;
 		padding: 20rpx;
 	}
-	.tips{
+
+	.tips {
 		color: rgba(0, 0, 0, .6);
 		padding: 20rpx;
 		margin-bottom: 60rpx;
-		
+
 	}
+
 	.slot-content {
-		   display: flex;
-		   flex-direction: row;
-		   justify-content: center;
-		   align-items: center;			
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
 	}
-	.but1{
+
+	.but1 {
 		width: 28%;
 		margin-right: 30rpx;
 		padding-bottom: 40rpx;
-		
+
 	}
 </style>

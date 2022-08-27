@@ -1,45 +1,54 @@
 <template>
 	<view class="page-container">
 		<view>
-			<view>
-				<u--text size="18" :text="newsInfo.title" bold margin="0 0 10px"></u--text>
+			<view style="margin-bottom: 40rpx;">
+				<u--text size="18" :text="newsInfo.title" bold></u--text>
 			</view>
 			<view>
 				<u-row gutter="10" justify="space-between">
 					<u-col span="4">
-						<u--text type="info" size="12" :text="appName"></u--text>
+						<u--text type="success" size="12" :text="appName"></u--text>
 					</u-col>
-					<u-col span="8" textAlign="end">
-						<u--text type="info" size="12" :text="newsInfo.create_time" align="right"></u--text>
+					<u-col span="8">
+						<u--text type="info" size="12" :text="newsInfo.create_time"></u--text>
 					</u-col>
 				</u-row>
 			</view>
 		</view>
 		<view class="content-info">
-			<view class="text_indent_two c-content" style="font-size: 13px; line-height: 1.5;">
+			<view style="font-size: 14px; line-height: 1.5; margin-bottom: 50rpx;">
 				<u-parse :content="newsInfo.content"></u-parse>
 			</view>
-			<view class="c-bottom">
-				<view class="grid-list">
-					<view class="grid-item" @click="gridClick(item.value, index, item.name)"
-						v-for="(item,index) in iconList" :key="index">
-						<view class="grid-icon">
-							<u-button :open-type="item.openType" color="hsla(0, 100%, 50%, 0)">
-								<u-icon :color="item.color" size="22" :name="item.icon"></u-icon>
-							</u-button>
-						</view>
-						<view class="grid-text">
-							{{item.name}}
-						</view>
+			<u-row gutter="10">
+				<u-col span="5">
+					<u-row gutter="10">
+						<u-col textAlign="center" align="center" span="4" v-for="(item, index) in iconList" :key="index"
+							@click="gridClick(item.value, index, item.name)">
+							<view style="height: 44px;">
+								<button :open-type="item.openType" class="u-reset-button"
+									style="width: 56px; height: 44px; background: transparent; border: none">
+									<u-icon :color="item.color" size="20" :name="item.icon"></u-icon>
+									<u--text type="info" size="12" :text="item.name"></u--text>
+								</button>
+							</view>
+						</u-col>
+					</u-row>
+				</u-col>
+				<u-col span="4" offset="3" textAlign="center" justify="end">
+					<view style="height: 44px;">
+						<button class="u-reset-button"
+							style="width: 56px; height: 44px; background: transparent; border: none">
+							<u-icon size="20" name="eye" color="#909399"></u-icon>
+							<u--text type="info" size="12" :text="newsInfo.read_count"></u--text>
+						</button>
 					</view>
-				</view>
-				<view class="c-count">阅读 <text>{{newsInfo.read_count}}</text></view>
-			</view>
+				</u-col>
+			</u-row>
 		</view>
 		<view class="footer-info">
 			<view class="f-title">
-				<text>精选留言</text>
-				<view @click="getComment">写留言</view>
+				<u--text type="info" color="#909399" text="精选留言"></u--text>
+				<u--text type="info" color="#909399" text="写留言" @click="getComment"></u--text>
 			</view>
 			<view class="f-list">
 				<view v-for="(item, index) in commentList" style="display: flex; justify-content: space-between">
@@ -84,19 +93,19 @@
 					name: "分享",
 					icon: "share",
 					value: "share",
-					color: "#333",
+					color: "#909399",
 					openType: "share"
 				}, {
 					name: "收藏",
 					icon: "star",
 					value: "collect",
-					color: "#333",
+					color: "#909399",
 					openType: ""
 				}, {
 					name: "点赞",
 					icon: "thumb-up",
 					value: "support",
-					color: "#333",
+					color: "#909399",
 					openType: ""
 				}],
 				commentList: [],
@@ -106,7 +115,7 @@
 					content: '',
 				},
 				supportColor: {
-					color: "#333333"
+					color: "#909399"
 				},
 				params: {
 					openid: ''
@@ -275,6 +284,10 @@
 </script>
 
 <style lang="less" scoped>
+	button::after {
+		border: none;
+	}
+
 	.text_indent_two {
 		text-indent: 10rpx;
 	}
@@ -318,7 +331,8 @@
 
 		.content-info {
 			background-color: #E1EFFE;
-			margin: 27rpx 0;
+			padding: 20rpx;
+			margin: 40rpx 0;
 
 			.c-title {
 				color: #333333;
