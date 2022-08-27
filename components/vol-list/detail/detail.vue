@@ -29,7 +29,7 @@
 						<u-col span="4" v-for="(item, index) in iconList" :key="index"
 							@click="gridClick(item.value, index, item.name)">
 							<u-row justify="space-between" gutter="10">
-								<u-col span="12">
+								<u-col span="12" align="center">
 									<button :open-type="item.openType" class="u-reset-button"
 										style="width: 24px; height: 24px; background: transparent; border: none">
 										<u-icon :color="item.color" size="20" :name="item.icon"></u-icon>
