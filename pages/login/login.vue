@@ -37,7 +37,6 @@
 		},
 		methods: {
 			wechatLogin() {
-				console.log('444')
 				var that = this
 				uni.getUserProfile({ // 调起微信询问是否登录，拿到用户信息
 					desc: '用于完善会员信息',
