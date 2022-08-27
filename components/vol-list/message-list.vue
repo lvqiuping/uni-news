@@ -56,6 +56,10 @@
 		data() {
 			return {
 				show: false,
+				newsInfo: {
+					id: 0,
+					title: ''
+				}
 			};
 		},
 		methods: {
@@ -71,13 +75,15 @@
 				return
 			},
 			toDetail(item) {
+				this.newsInfo = Object.assign({}, this.newsInfo, {
+					id: item.id,
+					title: item.title
+				})
 				const userInfo = uni.getStorageSync('userInfo')
-				if(!userInfo.phone){
+				if(userInfo.phone){
 					this.show = true
 					return
 				}
-				// const url = !userInfo.phone ? '/pages/phone/phone' : '/components/vol-list/detail/detail?id=' + item.id +
-				// 	"&title=" + item.title
 				const url = '/components/vol-list/detail/detail?id=' + item.id + "&title=" + item.title
 				uni.navigateTo({
 					url: url
@@ -93,8 +99,8 @@
 							const userInfo = uni.getStorageSync('userInfo')
 							userInfo.phone = res.data.phoneNumber
 							uni.setStorageSync('userInfo', userInfo)
-							uni.switchTab({
-								url: "/pages/home/home"
+							uni.navigateTo({
+								url: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + "&title=" + this.newsInfo.title
 							})
 						}
 					})
