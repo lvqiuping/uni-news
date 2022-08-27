@@ -1,79 +1,106 @@
 <template>
 	<view class="page-container">
-		<view>
-			<view style="margin-bottom: 40rpx;">
-				<u--text size="18" :text="newsInfo.title" bold></u--text>
-			</view>
+		<view v-show="!userInfo.phone">
 			<view>
-				<u-row gutter="10" justify="space-between">
-					<u-col span="4">
-						<u--text type="success" size="12" :text="appName"></u--text>
+				<view style="margin-bottom: 40rpx;">
+					{{ userInfo.nickname }}
+					<u--text size="18" :text="newsInfo.title" bold></u--text>
+				</view>
+				<view>
+					<u-row gutter="10" justify="space-between">
+						<u-col span="4">
+							<u--text type="success" size="12" :text="appName"></u--text>
+						</u-col>
+						<u-col span="8">
+							<u--text type="info" size="12" :text="newsInfo.create_time"></u--text>
+						</u-col>
+					</u-row>
+				</view>
+			</view>
+			<view class="content-info">
+				<view style="font-size: 14px; line-height: 1.5; margin-bottom: 50rpx;">
+					<u-parse :content="newsInfo.content"></u-parse>
+				</view>
+				<u-row gutter="10">
+					<u-col span="5">
+						<u-row gutter="10">
+							<u-col textAlign="center" align="center" span="4" v-for="(item, index) in iconList" :key="index"
+								@click="gridClick(item.value, index, item.name)">
+								<view style="height: 44px;">
+									<button :open-type="item.openType" class="u-reset-button"
+										style="width: 56px; height: 44px; background: transparent; border: none">
+										<u-icon :color="item.color" size="20" :name="item.icon"></u-icon>
+										<u--text type="info" size="12" :text="item.name"></u--text>
+									</button>
+								</view>
+							</u-col>
+						</u-row>
 					</u-col>
-					<u-col span="8">
-						<u--text type="info" size="12" :text="newsInfo.create_time"></u--text>
+					<u-col span="4" offset="3" textAlign="center" justify="end">
+						<view style="height: 44px;">
+							<button class="u-reset-button"
+								style="width: 56px; height: 44px; background: transparent; border: none">
+								<u-icon size="20" name="eye" color="#909399"></u-icon>
+								<u--text type="info" size="12" :text="newsInfo.read_count"></u--text>
+							</button>
+						</view>
 					</u-col>
 				</u-row>
 			</view>
-		</view>
-		<view class="content-info">
-			<view style="font-size: 14px; line-height: 1.5; margin-bottom: 50rpx;">
-				<u-parse :content="newsInfo.content"></u-parse>
-			</view>
-			<u-row gutter="10">
-				<u-col span="5">
-					<u-row gutter="10">
-						<u-col textAlign="center" align="center" span="4" v-for="(item, index) in iconList" :key="index"
-							@click="gridClick(item.value, index, item.name)">
-							<view style="height: 44px;">
-								<button :open-type="item.openType" class="u-reset-button"
-									style="width: 56px; height: 44px; background: transparent; border: none">
-									<u-icon :color="item.color" size="20" :name="item.icon"></u-icon>
-									<u--text type="info" size="12" :text="item.name"></u--text>
-								</button>
-							</view>
-						</u-col>
-					</u-row>
-				</u-col>
-				<u-col span="4" offset="3" textAlign="center" justify="end">
-					<view style="height: 44px;">
-						<button class="u-reset-button"
-							style="width: 56px; height: 44px; background: transparent; border: none">
-							<u-icon size="20" name="eye" color="#909399"></u-icon>
-							<u--text type="info" size="12" :text="newsInfo.read_count"></u--text>
-						</button>
-					</view>
-				</u-col>
-			</u-row>
-		</view>
-		<view class="footer-info">
-			<view class="f-title">
-				<u--text type="info" color="#909399" text="精选留言"></u--text>
-				<u--text type="info" color="#909399" text="写留言" @click="getComment"></u--text>
-			</view>
-			<view class="f-list">
-				<view v-for="(item, index) in commentList" style="display: flex; justify-content: space-between">
-					<view>{{item.content}}</view>
-					<view style="display: flex;" @click="support(item.id)">
-						<u-icon :color="supportColor.color" size="22" name="thumb-up" />{{item.support}}
-					</view>
+			<view class="footer-info">
+				<view class="f-title">
+					<u--text type="info" color="#909399" text="精选留言"></u--text>
+					<u--text type="info" color="#909399" text="写留言" @click="getComment"></u--text>
 				</view>
-
+				<view class="f-list">
+					<view v-for="(item, index) in commentList" style="display: flex; justify-content: space-between">
+						<view>{{item.content}}</view>
+						<view style="display: flex;" @click="support(item.id)">
+							<u-icon :color="supportColor.color" size="22" name="thumb-up" />{{item.support}}
+						</view>
+					</view>
+			
+				</view>
 			</view>
+			
+			<view style="height: 20rpx;"></view>
+			<!-- 弹框 -->
+			<u-popup :show="addComment" mode="bottom" @close="close" @open="open">
+				<u--form labelPosition="left" :model="comment" ref="form1">
+					<u-form-item prop="content" borderBottom>
+						<u--textarea v-model="comment.content" placeholder="请输入内容"></u--textarea>
+					</u-form-item>
+				</u--form>
+				<view style="margin: 60rpx 30rpx; display: flex;">
+					<u-button icon="lock-open" size="mini" shape="circle" @click="cancel" type="info" text="取消">
+					</u-button>
+					<u-button icon="lock-open" size="mini" shape="circle" @click="submit" type="primary" text="确定">
+					</u-button>
+				</view>
+			</u-popup>
 		</view>
+		<view v-show="userInfo.phone">
+			<u--text text="无权限查看" type="info"></u--text>
+		</view>
+		<u-popup :show="userInfo.phone" mode="bottom" :round="10" closeable="true" @close="close" @open="open">
+			<view class="slot-boxs">
+				<view class="tips">
+					是否确定继续前往查看更多内容？
+				</view>
+				<view class="slot-content">
+					<view class="but1">
+						<u-button type="info" @click="cancel">
+							取消
+						</u-button>
+					</view>
+					<view class="but1">
+						<u-button type="primary" openType="getPhoneNumber" @getphonenumber="getPhoneNumber"
+							class="but1">
+							确定
+						</u-button>
+					</view>
 
-		<view style="height: 20rpx;"></view>
-		<!-- 弹框 -->
-		<u-popup :show="addComment" mode="bottom" @close="close" @open="open">
-			<u--form labelPosition="left" :model="comment" ref="form1">
-				<u-form-item prop="content" borderBottom>
-					<u--textarea v-model="comment.content" placeholder="请输入内容"></u--textarea>
-				</u-form-item>
-			</u--form>
-			<view style="margin: 60rpx 30rpx; display: flex;">
-				<u-button icon="lock-open" size="mini" shape="circle" @click="cancel" type="info" text="取消">
-				</u-button>
-				<u-button icon="lock-open" size="mini" shape="circle" @click="submit" type="primary" text="确定">
-				</u-button>
+				</view>
 			</view>
 		</u-popup>
 	</view>
@@ -119,7 +146,8 @@
 				},
 				params: {
 					openid: ''
-				}
+				},
+				userInfo: null
 			}
 		},
 		// 分享给朋友
@@ -160,6 +188,10 @@
 		},
 		onShow() {
 			var that = this;
+				this.userInfo = uni.getStorageSync('userInfo')
+				// if (this.userInfo.phone) {
+				// 	return
+				// }
 			let params = {
 				id: that.newsInfo.id
 			}
@@ -236,6 +268,26 @@
 				this.addComment = false
 				return
 			},
+			getPhoneNumber(e) {
+				this.show = false
+				if (e.detail.errMsg === 'getPhoneNumber:ok') {
+					this.http.post('/User/getUserPhoneNumber', {
+						code: e.detail.code
+					}).then(res => {
+						if (res.code === 1) {
+							const userInfo = uni.getStorageSync('userInfo')
+							userInfo.phone = res.data.phoneNumber
+							uni.setStorageSync('userInfo', userInfo)
+							uni.navigateTo({
+								url: '/components/vol-list/detail/detail?id=' + this.newsInfo.id +
+									"&title=" + this.newsInfo.title
+							})
+						}
+					})
+				} else if (e.detail.errMsg === 'getPhoneNumber:fail user deny') {
+					console.log('拒绝获得手机号')
+				}
+			},
 			unescapeEntity(str) {
 				var reg =
 					/&(?:nbsp|#160|lt|#60|gt|62|amp|#38|quot|#34|cent|#162|pound|#163|yen|#165|euro|#8364|sect|#167|copy|#169|reg|#174|trade|#8482|times|#215|divide|#247);/g,
@@ -284,6 +336,31 @@
 </script>
 
 <style lang="less" scoped>
+	.slot-boxs {
+		height: 350rpx;
+		padding: 20rpx;
+	}
+	
+	.tips {
+		color: rgba(0, 0, 0, .6);
+		padding: 20rpx;
+		margin-bottom: 60rpx;
+	
+	}
+	
+	.slot-content {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.but1 {
+		width: 28%;
+		margin-right: 30rpx;
+		padding-bottom: 40rpx;
+	
+	}
 	button::after {
 		border: none;
 	}

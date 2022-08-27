@@ -1,17 +1,18 @@
 <script>
 	export default {
 		onLaunch: function() {
+			console.log('App onLaunch')
+		},
+		onShow: function(options) {
+			console.log('App Show')
+			// 分享进入不会触发onLaunch ，所以在app.js 的onshow中 判断来源执行操作
+			console.log('分享进入不会触发onLaunch', options)
 			const userInfo = uni.getStorageSync('userInfo')
 			if (!userInfo) {
 				uni.navigateTo({
 					url: '/pages/login/login'
 				})
 			}
-		},
-		onShow: function(options) {
-			console.log('App Show')
-			// 分享进入不会触发onLaunch ，所以在app.js 的onshow中 判断来源执行操作
-			console.log('分享进入不会触发onLaunch', options)
 			
 		},
 		onHide: function() {
