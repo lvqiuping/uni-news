@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<view v-show="userInfo && userInfo.phone">
+		<view v-show="userInfo.phone">
 			<view>
 				<view style="margin-bottom: 40rpx;">
 					<u--text size="18" :text="newsInfo.title" bold></u--text>
@@ -11,7 +11,7 @@
 							<u--text type="success" size="12" :text="appName"></u--text>
 						</u-col>
 						<u-col span="8">
-							<u--text type="info" size="12" align="right" :text="newsInfo.create_time"></u--text>
+							<u--text type="info" size="12" :text="newsInfo.create_time"></u--text>
 						</u-col>
 					</u-row>
 				</view>
@@ -23,8 +23,8 @@
 				<u-row gutter="10">
 					<u-col span="5">
 						<u-row gutter="10">
-							<u-col textAlign="center" align="center" span="4" v-for="(item, index) in iconList"
-								:key="index" @click="gridClick(item.value, index, item.name)">
+							<u-col textAlign="center" align="center" span="4" v-for="(item, index) in iconList" :key="index"
+								@click="gridClick(item.value, index, item.name)">
 								<view style="height: 44px;">
 									<button :open-type="item.openType" class="u-reset-button"
 										style="width: 56px; height: 44px; background: transparent; border: none">
@@ -40,8 +40,7 @@
 							<button class="u-reset-button"
 								style="width: 56px; height: 44px; background: transparent; border: none">
 								<u-icon size="20" name="eye" color="#909399"></u-icon>
-								<u--text type="info" size="12" :text="newsInfo.read_count" margin="0 0 0 10rpx">
-								</u--text>
+								<u--text type="info" size="12" :text="newsInfo.read_count"></u--text>
 							</button>
 						</view>
 					</u-col>
@@ -50,7 +49,7 @@
 			<view class="footer-info">
 				<view class="f-title">
 					<u--text type="info" color="#909399" text="精选留言"></u--text>
-					<u--text type="info" color="#909399" text="写留言" align="right" @click="getComment"></u--text>
+					<u--text type="info" color="#909399" text="写留言" @click="getComment"></u--text>
 				</view>
 				<view class="f-list">
 					<view v-for="(item, index) in commentList" style="display: flex; justify-content: space-between">
@@ -59,45 +58,56 @@
 							<u-icon :color="supportColor.color" size="22" name="thumb-up" />{{item.support}}
 						</view>
 					</view>
-
+			
 				</view>
 			</view>
-
+			
 			<view style="height: 20rpx;"></view>
-			<!-- 弹框留言 -->
+			<!-- 弹框 -->
 			<u-popup :show="addComment" mode="bottom" @close="close" @open="open">
 				<u--form labelPosition="left" :model="comment" ref="form1">
 					<u-form-item prop="content" borderBottom>
 						<u--textarea v-model="comment.content" placeholder="请输入内容"></u--textarea>
 					</u-form-item>
 				</u--form>
-				<u-row>
-					<u-col span="6">
-						<u-button @click="cancel" type="info" text="取消">
-						</u-button>
-					</u-col>
-					<u-col span="6">
-						<u-button :disabled="!comment.content" @click="submit" type="primary" text="确定">
-						</u-button>
-					</u-col>
-				</u-row>
+				<view style="margin: 60rpx 30rpx; display: flex;">
+					<u-button icon="lock-open" size="mini" shape="circle" @click="cancel" type="info" text="取消">
+					</u-button>
+					<u-button icon="lock-open" size="mini" shape="circle" @click="submit" type="primary" text="确定">
+					</u-button>
+				</view>
 			</u-popup>
 		</view>
-		<view v-show="userInfo && !userInfo.phone">
+		<view v-show="!userInfo.phone">
 			<u--text text="无权限查看" type="info"></u--text>
 		</view>
-		<!-- 弹框询问电话 -->
-		<phone-file :showPop="userInfo && !userInfo.phone" :detail-id="newsInfo.id"></phone-file>
+		<u-popup :show="!userInfo.phone" mode="bottom" :round="10" closeable="true" @close="close" @open="open">
+			<view class="slot-boxs">
+				<view class="tips">
+					是否确定继续前往查看更多内容？
+				</view>
+				<view class="slot-content">
+					<view class="but1">
+						<u-button type="info" @click="cancel">
+							取消
+						</u-button>
+					</view>
+					<view class="but1">
+						<u-button type="primary" openType="getPhoneNumber" @getphonenumber="getPhoneNumber"
+							class="but1">
+							确定
+						</u-button>
+					</view>
+
+				</view>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
 <script>
 	const app = getApp()
-	import PhoneFile from '@/components/view-phone/phone-file.vue'
 	export default {
-		components: {
-			'phone-file': PhoneFile
-		},
 		data() {
 			return {
 				appName: '',
@@ -136,12 +146,12 @@
 				params: {
 					openid: ''
 				},
-				userInfo: null,
-				isShare: false
+				userInfo: null
 			}
 		},
 		// 分享给朋友
 		onShareAppMessage: function(options) {
+			console.log('fenxiag', options)
 			// must return custom share data when user share.
 			return {
 				title: '吕秋萍',
@@ -164,23 +174,23 @@
 				title: '吕秋萍小程序',
 				query: testQuery
 			}
+
 		},
 		onLoad(option) {
+			console.log('详情页', option)
 			var that = this;
-			this.isShare = option.isShare
-			// 如果没有登录,就登录, 分享进来的话option.id存在要传给登录页
-			const userInfo = uni.getStorageSync('userInfo')
-			if (!userInfo) {
-				uni.navigateTo({
-					url: '/pages/login/login?id=' + option.id
-				})
-			}
+			uni.setNavigationBarTitle({
+				title: option.title
+			})
 			this.appName = app.globalData.appName
 			that.newsInfo.id = option.id
 		},
 		onShow() {
 			var that = this;
-			this.userInfo = uni.getStorageSync('userInfo')
+				this.userInfo = uni.getStorageSync('userInfo')
+				// if (this.userInfo.phone) {
+				// 	return
+				// }
 			let params = {
 				id: that.newsInfo.id
 			}
@@ -189,20 +199,14 @@
 					result.data.content = this.unescapeEntity(result.data.content)
 					that.newsInfo = Object.assign({}, that.newsInfo, result.data);
 					that.loading = false;
-					uni.setNavigationBarTitle({
-						title: result.data.title
-					})
 				}),
 				that.getList();
 			that.gridClick('read_count'); // 进入页面就加一次阅读量
 		},
-		onUnload() {
-			if (this.isShare) {
-				uni.redirectTo({
-					url: '/pages/home/home'
-				})
-			}
-
+		onUnload(){
+			uni.reLaunch({
+				url: '/pages/home/home'
+			})
 		},
 		methods: {
 			getComment() {
@@ -266,11 +270,28 @@
 			},
 			cancel() {
 				this.addComment = false
+				return
 			},
-			cancelGetPhone() {
-				uni.redirectTo({
-					url: '/pages/home/home'
-				})
+			getPhoneNumber(e) {
+				this.show = false
+				if (e.detail.errMsg === 'getPhoneNumber:ok') {
+					this.http.post('/User/getUserPhoneNumber', {
+						code: e.detail.code
+					}).then(res => {
+						if (res.code === 1) {
+							const userInfo = uni.getStorageSync('userInfo')
+							userInfo.phone = res.data.phoneNumber
+							uni.setStorageSync('userInfo', userInfo)
+							this.userInfo = userInfo
+							// uni.navigateTo({
+							// 	url: '/components/vol-list/detail/detail?id=' + this.newsInfo.id +
+							// 		"&title=" + this.newsInfo.title
+							// })
+						}
+					})
+				} else if (e.detail.errMsg === 'getPhoneNumber:fail user deny') {
+					console.log('拒绝获得手机号')
+				}
 			},
 			unescapeEntity(str) {
 				var reg =
@@ -324,28 +345,27 @@
 		height: 350rpx;
 		padding: 20rpx;
 	}
-
+	
 	.tips {
 		color: rgba(0, 0, 0, .6);
 		padding: 20rpx;
 		margin-bottom: 60rpx;
-
+	
 	}
-
+	
 	.slot-content {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
 	}
-
+	
 	.but1 {
 		width: 28%;
 		margin-right: 30rpx;
 		padding-bottom: 40rpx;
-
+	
 	}
-
 	button::after {
 		border: none;
 	}

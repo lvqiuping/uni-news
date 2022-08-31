@@ -5,6 +5,23 @@
 		},
 		onShow: function(options) {
 			console.log('App Show')
+			// 分享进入不会触发onLaunch ，所以在app.js 的onshow中 判断来源执行操作
+			// options.query = {
+			// 	id: 7
+			// }
+			// 如果自己扫码进入，options没有query,地址也不一样
+			let data = {
+				url: options.path,
+				// url: 'components/vol-list/detail/detail',
+				query: options.query
+			}
+			const userInfo = uni.getStorageSync('userInfo')
+			if (!userInfo) {
+				uni.navigateTo({
+					url: '/pages/login/login?data=' + encodeURIComponent(JSON.stringify(data))
+				})
+			}
+			
 		},
 		onHide: function() {
 			console.log('App Hide')

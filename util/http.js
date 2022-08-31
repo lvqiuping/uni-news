@@ -25,12 +25,12 @@ function request(url, method = 'GET', data = {}, loading = false) {
 			title: typeof loading == 'boolean' ? "正在处理..." : loading
 		})
 	}
-	
+
 	const userInfo = uni.getStorageSync('userInfo')
 	if (userInfo) {
 		data.openid = userInfo.openid
 	}
-	
+
 	if (url.startsWith("/")) {
 		url = url.substr(1)
 	}
@@ -49,7 +49,7 @@ function request(url, method = 'GET', data = {}, loading = false) {
 			data: data,
 			header: _header,
 			success: (res) => {
-				if(res.statusCode !== 200){
+				if (res.statusCode !== 200) {
 					uni.showToast({
 						icon: "none",
 						title: res.msg | 'error'
@@ -65,7 +65,7 @@ function request(url, method = 'GET', data = {}, loading = false) {
 						})
 						return;
 					}
-					
+
 					if (res.statusCode == 404) {
 						uni.showToast({
 							icon: "none",
@@ -86,7 +86,7 @@ function request(url, method = 'GET', data = {}, loading = false) {
 					// 	})
 					// 	return;
 					// }
-					
+
 					if (res.header.vol_exp == "1") {
 						post('api/User/replaceToken', "POST").then(async result => {
 							let userInfo = store.getters.getUserInfo();
@@ -94,8 +94,9 @@ function request(url, method = 'GET', data = {}, loading = false) {
 							store.commit('setUserInfo', userInfo);
 						});
 					}
-					
-				}else{
+
+				} else {
+					uni.hideLoading();
 					reslove(res.data)
 				}
 			},
@@ -115,7 +116,7 @@ function request(url, method = 'GET', data = {}, loading = false) {
 					icon: "none",
 					title: "请求接口失败" + JSON.stringify(err)
 				})
-				
+
 			}
 		});
 	})

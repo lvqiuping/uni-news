@@ -14,7 +14,7 @@
 			</u-col>
 		</u-row>
 
-		<view style="margin-bottom: 12px">
+		<view style="margin: 12px 0">
 			<u-sticky bgColor="#fff">
 				<u-tabs :list="tabsTitle" lineColor="#f56c6c" :current="tabIndex" :activeStyle="{
 								            color: '#Fc5c5b',
@@ -25,7 +25,7 @@
 								            color: '#606266',
 											fontSize: '30rpx',
 								            transform: 'scale(1)'
-								        }" itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;" @click="tabsClick" />
+								        }" itemStyle=" padding-right: 15px; height: 34px;" @click="tabsClick" />
 			</u-sticky>
 		</view>
 
@@ -56,9 +56,8 @@
 		data() {
 			return {
 				swiperList: [
-					'/static/swiper1.png',
-					'/static/swiper2.png',
-					'/static/swiper3.png'
+					'/static/imgs/swiper1.jpg',
+					'/static/imgs/swiper1.jpg'
 				],
 				tabsTitle: [],
 				list: [],
@@ -72,7 +71,7 @@
 				logo: '/static/imgs/logo.png'
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			var that = this;
 			uni.getSystemInfo({ // 获取手机状态栏高度
 				success: function(data) {

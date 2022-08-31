@@ -129,12 +129,9 @@
 			},
 			close() {
 				this.show = false
-				// console.log('close');
 			},
 			gridClick(p) {
-				console.log(typeof(p))
 				if (p === '0') {
-					console.log(p)
 					this.show = true
 				}
 			},
@@ -145,7 +142,6 @@
 				this.page++;
 				let url = 'api/app_news/getList?newsType=' + 1 + "&page=" + this.page;
 				this.http.get(url, {}, false).then(result => {
-					console.log('result', result)
 					result.forEach(item => {
 						item.imageUrl = this.http.ipAddress + item.imageUrl;
 					})
