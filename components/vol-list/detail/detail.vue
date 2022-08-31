@@ -169,32 +169,32 @@
 			var that = this;
 			this.isShare = option.isShare
 			// 如果没有登录,就登录, 分享进来的话option.id存在要传给登录页
-			const userInfo = uni.getStorageSync('userInfo')
-			if (!userInfo) {
-				uni.navigateTo({
-					url: '/pages/login/login?id=' + option.id
-				})
-			}
 			this.appName = app.globalData.appName
 			that.newsInfo.id = option.id
 		},
 		onShow() {
 			var that = this;
 			this.userInfo = uni.getStorageSync('userInfo')
-			let params = {
-				id: that.newsInfo.id
-			}
-			// 初始化新闻内容
-			that.http.get("/News/read", params).then(result => {
+			if (!this.userInfo) {
+				uni.navigateTo({
+					url: '/pages/login/login?id=' + this.newsInfo.id
+				})
+			} else {
+				let params = {
+					id: that.newsInfo.id
+				}
+				// 初始化新闻内容
+				that.http.get("/News/read", params).then(result => {
 					result.data.content = this.unescapeEntity(result.data.content)
 					that.newsInfo = Object.assign({}, that.newsInfo, result.data);
 					that.loading = false;
 					uni.setNavigationBarTitle({
 						title: result.data.title
 					})
-				}),
+				})
 				that.getList();
-			that.gridClick('read_count'); // 进入页面就加一次阅读量
+				that.gridClick('read_count'); // 进入页面就加一次阅读量
+			}
 		},
 		onUnload() {
 			if (this.isShare) {
