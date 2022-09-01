@@ -144,7 +144,7 @@
 		onShareAppMessage: function(options) {
 			// must return custom share data when user share.
 			return {
-				title: '吕秋萍',
+				title: this.newsInfo.title,
 				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.$store.state
 					.userInfo.openid,
 				success(res) {
@@ -161,16 +161,18 @@
 			var that = this
 			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.$store.state.userInfo.openid
 			return {
-				title: '吕秋萍小程序',
+				title: this.newsInfo.title,
 				query: testQuery
 			}
 		},
 		onLoad(option) {
+			console.log('option', option)
 			var that = this;
 			this.isShare = option.isShare
 			// 如果没有登录,就登录, 分享进来的话option.id存在要传给登录页
 			this.appName = app.globalData.appName
 			that.newsInfo.id = option.id
+			that.newsInfo.title = option.title
 		},
 		onShow() {
 			var that = this;
