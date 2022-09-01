@@ -1,7 +1,7 @@
 <template>
 	<view class="page-container">
 		<view v-show="userInfo && userInfo.phone">
-			<view>
+			<view style="padding: 40rpx;">
 				<view style="margin-bottom: 40rpx;">
 					<u--text size="18" :text="newsInfo.title" bold></u--text>
 				</view>
@@ -17,7 +17,7 @@
 				</view>
 			</view>
 			<view class="content-info">
-				<view style="font-size: 14px; line-height: 1.5; margin-bottom: 50rpx;">
+				<view style="font-size: 14px; line-height: 1.5; margin-bottom: 80rpx;">
 					<u-parse :content="newsInfo.content"></u-parse>
 				</view>
 				<u-row gutter="10">
@@ -35,7 +35,7 @@
 							</u-col>
 						</u-row>
 					</u-col>
-					<u-col span="4" offset="3" textAlign="center" justify="end">
+					<u-col span="4" offset="3" textAlign="right" justify="end">
 						<view style="height: 44px;">
 							<button class="u-reset-button"
 								style="width: 56px; height: 44px; background: transparent; border: none">
@@ -47,19 +47,42 @@
 					</u-col>
 				</u-row>
 			</view>
-			<view class="footer-info">
-				<view class="f-title">
-					<u--text type="info" color="#909399" text="精选留言"></u--text>
-					<u--text type="info" color="#909399" text="写留言" align="right" @click="getComment"></u--text>
-				</view>
-				<view class="f-list">
-					<view v-for="(item, index) in commentList" style="display: flex; justify-content: space-between">
-						<view>{{item.content}}</view>
-						<view style="display: flex;" @click="support(item.id)">
-							<u-icon :color="supportColor.color" size="22" name="thumb-up" />{{item.support}}
-						</view>
-					</view>
 
+			<view style="padding: 40rpx;">
+				<view style="margin-bottom: 30rpx;">
+					<u-row gutter="10">
+						<u-col span="4">
+							<u--text type="info" text="精选留言"></u--text>
+						</u-col>
+						<u-col span="4" offset="4" textAlign="right">
+							<u--text type="primary" text="写留言" align="right" @click="getComment"></u--text>
+						</u-col>
+					</u-row>
+				</view>
+				<view>
+					<u-row gutter="10" align="top" v-for="(item, index) in commentList" :key="index">
+						<u-col span="2">
+							<u--image :src="item.user.header_img" width="35" height="35" radius="5"></u--image>
+						</u-col>
+						<u-col span="10" textAlign="right">
+							<u-row>
+								<u-col span="9">
+									<u--text type="primary" :text="item.user.nickname"></u--text>
+								</u-col>
+								<u-col span="3" textAlign="right">
+									<view style="display: flex;" @click="support(item.id)">
+										<u--text type="primary" :text="item.support" prefixIcon="thumb-up" align="right"
+											iconStyle="font-size: 20px"></u--text>
+									</view>
+								</u-col>
+							</u-row>
+							<u-row>
+								<u-col span="12">
+									<u--text :text="item.content"></u--text>
+								</u-col>
+							</u-row>
+						</u-col>
+					</u-row>
 				</view>
 			</view>
 
@@ -320,127 +343,18 @@
 </script>
 
 <style lang="less" scoped>
-	.slot-boxs {
-		height: 350rpx;
-		padding: 20rpx;
-	}
-
-	.tips {
-		color: rgba(0, 0, 0, .6);
-		padding: 20rpx;
-		margin-bottom: 60rpx;
-
-	}
-
-	.slot-content {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.but1 {
-		width: 28%;
-		margin-right: 30rpx;
-		padding-bottom: 40rpx;
-
-	}
-
 	button::after {
 		border: none;
 	}
 
-	.text_indent_two {
-		text-indent: 10rpx;
-	}
-
-	.over_two_lines {
-		display: -webkit-box;
-		word-break: break-all;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: pre-line;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-	}
-
 	.page-container {
-		padding: 10rpx;
 		height: calc(100vh - 110rpx);
 		overflow: scroll;
 		color: #333333;
 
-		.title-info {
-			font-size: 40rpx;
-
-			.t-title {
-				text-align: center;
-				margin-bottom: 40rpx;
-			}
-
-			.t-tips {
-				font-size: 30rpx;
-				color: #999999;
-				display: flex;
-				justify-content: space-between;
-
-				.t-user {
-					color: #FC5C5B;
-				}
-			}
-		}
-
-
 		.content-info {
 			background-color: #E1EFFE;
-			padding: 20rpx;
-			margin: 40rpx 0;
-
-			.c-title {
-				color: #333333;
-				font-size: 40rpx;
-				text-align: center;
-				padding: 30rpx 0 20rpx;
-			}
-
-			.c-content {
-				padding: 24rpx;
-			}
-
-		}
-
-		.c-bottom {
-			display: flex;
-			padding: 20rpx;
-			justify-content: space-between;
-
-
-			.grid-list {
-				width: 75%;
-				display: inline-block;
-
-				.grid-item {
-					margin-right: 20rpx;
-					text-align: center;
-					float: left;
-				}
-
-				.grid-icon {
-					height: 80rpx;
-					position: relative;
-				}
-
-				.grid-text {
-					font-size: 24rpx;
-					color: #7e7e7e;
-				}
-			}
-
-			.c-count {
-				display: flex;
-				flex-direction: cloumn;
-				align-items: flex-end;
-			}
+			padding: 40rpx;
 		}
 
 		.footer-info {
