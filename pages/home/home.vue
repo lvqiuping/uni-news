@@ -1,18 +1,20 @@
 <template>
-	<view style="min-height: 100vh; padding: 10rpx">
-		<u-row justify="space-between" gutter="10">
-			<u-col span="4">
-				<u-row justify="space-between">
-					<u-col span="12">
-						<u--image class="" :src="logo" width="65" height="40"></u--image>
-					</u-col>
-				</u-row>
-			</u-col>
-			<u-col span="8">
-				<u-search placeholder="搜索内容" v-model="searchWord" :showAction=fasle @search="search" shape="square">
-				</u-search>
-			</u-col>
-		</u-row>
+	<view style="min-height: 100vh;">
+		<view style="padding: 20rpx 30rpx">
+			<u-row justify="space-between" gutter="10">
+				<u-col span="4">
+					<u-row justify="space-between">
+						<u-col span="12">
+							<u--image class="" :src="logo" width="65" height="40"></u--image>
+						</u-col>
+					</u-row>
+				</u-col>
+				<u-col span="8">
+					<u-search placeholder="搜索内容" v-model="searchWord" :showAction=fasle @search="search" shape="square">
+					</u-search>
+				</u-col>
+			</u-row>
+		</view>
 
 		<view style="margin: 12px 0">
 			<u-sticky bgColor="#fff">
@@ -30,7 +32,7 @@
 		</view>
 
 		<u-row justify="space-between">
-			<u-col span="12">
+			<u-col span="12" align="center">
 				<view style="margin-bottom: 10px;">
 					<u-row justify="space-between">
 						<u-col span="12">
@@ -39,8 +41,11 @@
 						</u-col>
 					</u-row>
 				</view>
-				<message-list :list="list[tabIndex]"></message-list>
-				<u-loadmore v-if="!tabsTitle[tabIndex].hasMore" status="nomore" height="30"></u-loadmore>
+				<view style="padding: 30rpx;">
+					<message-list :list="list[tabIndex]"></message-list>
+					<u-loadmore v-if="tabsTitle[tabIndex] && !tabsTitle[tabIndex].hasMore" status="nomore" line isDot
+						height="30"></u-loadmore>
+				</view>
 			</u-col>
 		</u-row>
 		<!-- <phone-file :show="show"></phone-file> -->
