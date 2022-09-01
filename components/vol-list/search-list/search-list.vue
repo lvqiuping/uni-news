@@ -1,12 +1,12 @@
 <template>
-	<view style="padding: 20rpx;">
-		<view style="margin-bottom: .5rem">
+	<view style="padding: 20rpx 30rpx;">
+		<view style="margin-bottom: 30rpx">
 			<u-search placeholder="搜索内容" v-model="title" :showAction=fasle @search="search" shape="square">
 			</u-search>
 		</view>
 
 		<message-list :list="searchData"></message-list>
-		<u-loadmore v-if="!hasMore" status="nomore" height="30"></u-loadmore>
+		<u-loadmore v-if="!hasMore" status="nomore" isDot line height="30"></u-loadmore>
 	</view>
 </template>
 

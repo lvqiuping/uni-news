@@ -49,30 +49,34 @@
 			</view>
 
 			<view style="padding: 40rpx;">
-				<view style="margin-bottom: 30rpx;">
+				<view style="margin-bottom: 50rpx;">
 					<u-row gutter="10">
 						<u-col span="4">
 							<u--text type="info" text="精选留言"></u--text>
 						</u-col>
 						<u-col span="4" offset="4" textAlign="right">
-							<u--text type="primary" text="写留言" align="right" @click="getComment"></u--text>
+							<u--text :color="commentsColor" text="写留言" align="right" @click="getComment"></u--text>
 						</u-col>
 					</u-row>
 				</view>
-				<view>
-					<u-row gutter="10" align="top" v-for="(item, index) in commentList" :key="index">
+				<view v-for="(item, index) in commentList" :key="index" style="margin-bottom: 30rpx;">
+					<u-row align="top">
 						<u-col span="2">
-							<u--image :src="item.user.header_img" width="35" height="35" radius="5"></u--image>
+							<view style="padding: 0 20rpx">
+								<u-avatar :src="item.user.header_img" shape="square" size="30">
+								</u-avatar>
+							</view>
 						</u-col>
-						<u-col span="10" textAlign="right">
+						<u-col span="10">
 							<u-row>
 								<u-col span="9">
-									<u--text type="primary" :text="item.user.nickname"></u--text>
+									<u--text :color="commentsColor" :text="item.user.nickname"></u--text>
 								</u-col>
 								<u-col span="3" textAlign="right">
 									<view style="display: flex;" @click="support(item.id)">
-										<u--text type="primary" :text="item.support" prefixIcon="thumb-up" align="right"
-											iconStyle="font-size: 20px"></u--text>
+										<u--text :color="commentsColor" :text="item.support" prefixIcon="thumb-up"
+											align="right" :iconStyle="{ fontSize: '20px', color: commentsColor }">
+										</u--text>
 									</view>
 								</u-col>
 							</u-row>
@@ -89,21 +93,28 @@
 			<view style="height: 20rpx;"></view>
 			<!-- 弹框留言 -->
 			<u-popup :show="addComment" mode="bottom" @close="close" @open="open">
-				<u--form labelPosition="left" :model="comment" ref="form1">
-					<u-form-item prop="content" borderBottom>
-						<u--textarea v-model="comment.content" placeholder="请输入内容"></u--textarea>
-					</u-form-item>
-				</u--form>
-				<u-row>
-					<u-col span="6">
-						<u-button @click="cancel" type="info" text="取消">
-						</u-button>
-					</u-col>
-					<u-col span="6">
-						<u-button :disabled="!comment.content" @click="submit" type="primary" text="确定">
-						</u-button>
-					</u-col>
-				</u-row>
+				<view style="background-color: #f3f4f6; padding: 30rpx;">
+					<view style="margin-bottom: 30rpx;">
+						<u-row>
+							<u-col span="6">
+								<u--text type="info" text="写留言"></u--text>
+							</u-col>
+							<u-col span="6" textAlign="right">
+								<u--text type="primary" text="取消" align="right" @click="cancel"></u--text>
+							</u-col>
+						</u-row>
+					</view>
+					<view>
+						<u-row justify="center">
+							<u-col span="10" justify="center">
+								<u--textarea v-model="comment.content" placeholder="请输入内容" @confirm="submit"
+									@focus="getFocus($)" @keyboardheightchange="keyboardHeightChange"
+									:focus="addComment" :showConfirmBar="false">
+								</u--textarea>
+							</u-col>
+						</u-row>
+					</view>
+				</view>
 			</u-popup>
 		</view>
 		<view v-show="userInfo && !userInfo.phone">
@@ -149,7 +160,7 @@
 				}],
 				commentList: [],
 				id: 0,
-				page: 0,
+				page: 1,
 				comment: {
 					content: '',
 				},
@@ -160,7 +171,8 @@
 					openid: ''
 				},
 				userInfo: null,
-				isShare: false
+				isShare: false,
+				commentsColor: '#2b85e4'
 			}
 		},
 		// 分享给朋友
@@ -183,10 +195,10 @@
 		onShareTimeline: function() {
 			var that = this
 			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.$store.state.userInfo.openid
-			return {
-				title: '吕秋萍小程序',
-				query: testQuery
-			}
+			// return {
+			// 	title: '小程序',
+			// 	query: testQuery
+			// }
 		},
 		onLoad(option) {
 			var that = this;
@@ -225,9 +237,14 @@
 					url: '/pages/home/home'
 				})
 			}
-
 		},
 		methods: {
+			getFocus(e) {
+				console.log('focus', e)
+			},
+			keyboardHeightChange(e) {
+				console.log('keyboardHeightChange', e)
+			},
 			getComment() {
 				this.addComment = true
 				this.comment = {
@@ -355,30 +372,6 @@
 		.content-info {
 			background-color: #E1EFFE;
 			padding: 40rpx;
-		}
-
-		.footer-info {
-			.f-title {
-				display: flex;
-				justify-content: space-between;
-			}
-
-			.f-list {
-				color: #999999;
-				margin: 20rpx 0;
-			}
-
-		}
-
-		.u-po {
-			height: 300rpx;
-
-			.u-po-title {
-				display: flex;
-				font-size: 50rpx;
-				color: #333333;
-				margin: 20rpx 40rpx;
-			}
 		}
 	}
 </style>

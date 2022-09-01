@@ -1,12 +1,18 @@
 <template>
-	<view>
-		<u-divider text="暂未登录" @click="wechatLogin"></u-divider>
-		<view class="login-other">
-			<u-button type="primary" shape="circle" @click="wechatLogin">
-				<image class="img" :key="index" v-for="(src,index) in icons" :src="src">
-					微信一键授权
-			</u-button>
-		</view>
+	<view style="min-height: 100vh">
+		<u-row>
+			<u-col span="12">
+				<view style="padding: 50% 0">
+					<u-divider text="暂未登录" @click="wechatLogin"></u-divider>
+					<view class="login-other">
+						<u-button type="primary" shape="circle" @click="wechatLogin">
+							<image class="img" :key="index" v-for="(src,index) in icons" :src="src">
+								微信一键授权
+						</u-button>
+					</view>
+				</view>
+			</u-col>
+		</u-row>
 		<!-- 弹框询问电话 -->
 		<phone-file :showPop="userInfo && !userInfo.phone" :detail-id="detailId"></phone-file>
 	</view>
@@ -84,8 +90,15 @@
 											that.userInfo = result.data
 
 											if (result.data.phone) {
+												let url = '/pages/home/home'
+												if (that.detailId > 0) {
+													url =
+														'/components/vol-list/detail/detail?id=' +
+														that.detailId
+												}
+
 												uni.reLaunch({
-													url: '/pages/home/home'
+													url: url
 												})
 											}
 										});
