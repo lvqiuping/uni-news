@@ -182,7 +182,7 @@
 		onShareAppMessage: function(options) {
 			// must return custom share data when user share.
 			return {
-				title: '吕秋萍',
+				title: this.newsInfo.title,
 				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.$store.state
 					.userInfo.openid,
 				success(res) {
@@ -196,19 +196,21 @@
 		},
 		// 分享到朋友圈，加上这个上面微信自带的按钮才会能选择
 		onShareTimeline: function() {
-			var that = this
+			var that = this.newsInfo.title
 			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.$store.state.userInfo.openid
-			// return {
-			// 	title: '小程序',
-			// 	query: testQuery
-			// }
+			return {
+				title: this.newsInfo.title,
+				query: testQuery
+			}
 		},
 		onLoad(option) {
+			console.log('option', option)
 			var that = this;
 			this.isShare = option.isShare
 			// 如果没有登录,就登录, 分享进来的话option.id存在要传给登录页
 			this.appName = app.globalData.appName
 			that.newsInfo.id = option.id
+			that.newsInfo.title = option.title
 		},
 		onShow() {
 			var that = this;

@@ -1,6 +1,29 @@
 <template>
 	<view>
 		<u-popup :show="getShowPop" mode="center" :round="10">
+			<!-- 	<view style="width: 500rpx; height: 500rpx; text-align: center;">
+				<image src="../../static/imgs/logo.png" style="width: 180rpx; height: 150rpx; margin: 30rpx 0 20rpx 0">
+				</image>
+				<view style="margin: 0 40rpx">
+					<u--text text="为了提供更多的详情,小程序需要您的手机号授权" align="left" size="12" color="rgb(121,121,121)">
+					</u--text>
+				</view>
+				<u-row style="display: flex;">
+					<u-col span="4">
+						<u-button type="primary" :plain="true" size="small" shape="circle" text="确定"></u-button>
+						<button class="" style="" @click="cancelGetPhone">
+							拒绝
+						</button>
+					</u-col>
+					<u-col span="4">
+						<u-button type="primary" size="small" shape="circle" text="确定"></u-button>
+						<button openType="getPhoneNumber" @getphonenumber="getPhoneNumber" @click="getPhone" class=""
+							style="">
+							允许
+						</button>
+					</u-col>
+				</u-row>
+			</view> -->
 			<view class="slot-boxs" style="position: relative">
 				<view>
 					<u--text text="提示" size="18" align="center" margin="30rpx 0 40rpx" bold></u--text>
@@ -50,6 +73,11 @@
 		computed: {
 			getShowPop() {
 				return this.showPop
+			}
+		},
+		data() {
+			return {
+				getShowPop2: true
 			}
 		},
 		methods: {
