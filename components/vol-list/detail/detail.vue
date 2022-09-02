@@ -54,7 +54,7 @@
 					</u-row>
 				</view>
 				<view v-for="(item, index) in commentList" :key="index" style="margin-bottom: 15rpx;">
-					<u-row align="top" justify="space-between" gutter="40">
+					<u-row align="top" justify="space-between" gutter="30">
 						<u-col span="1">
 							<view style="padding: 15rpx 0">
 								<u-avatar :src="item.user.header_img" shape="circle" size="30">
@@ -68,7 +68,7 @@
 								</u-col>
 								<u-col span="2">
 									<view style="display: flex;" @click="support(item.id)">
-										<u--text :color="item.support === 0? '#333' : commentsColor"
+										<u--text :color="item.support === 0 ? '#333' : commentsColor"
 											:text="item.support" prefixIcon="thumb-up" align="right"
 											:iconStyle="item.support === 0 ? 'color: #333': 'color: red'">
 										</u--text>
