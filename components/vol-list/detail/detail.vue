@@ -54,32 +54,36 @@
 					</u-row>
 				</view>
 				<view v-for="(item, index) in commentList" :key="index" style="margin-bottom: 15rpx;">
-					<u-row align="top" justify="space-between" gutter="40">
+					<u-row align="top" justify="space-between">
 						<u-col span="1">
-							<view style="padding: 15rpx 0">
+							<view>
 								<u-avatar :src="item.user.header_img" shape="circle" size="30">
 								</u-avatar>
 							</view>
 						</u-col>
 						<u-col span="11">
-							<u-row>
-								<u-col span="9">
-									<u--text type="info" :text="item.user.nickname"></u--text>
-								</u-col>
-								<u-col span="2">
-									<view style="display: flex;" @click="support(item.id)">
-										<u--text :color="item.support === 0? '#333' : commentsColor"
-											:text="item.support" prefixIcon="thumb-up" align="right"
-											:iconStyle="item.support === 0 ? 'color: #333': 'color: red'">
-										</u--text>
-									</view>
-								</u-col>
-							</u-row>
-							<u-row>
-								<u-col span="12">
-									<u--text :text="item.content"></u--text>
-								</u-col>
-							</u-row>
+							<view style="padding-left: 20rpx;">
+								<u-row>
+									<u-col span="9">
+										<u--text type="info" :text="item.user.nickname"></u--text>
+									</u-col>
+									<u-col span="2">
+										<view style="display: flex;" @click="support(item.id)">
+											<u--text :color="item.support === 0? '#333' : commentsColor"
+												:text="item.support" prefixIcon="thumb-up" align="right"
+												:iconStyle="item.support === 0 ? 'color: #333': 'color: red'">
+											</u--text>
+										</view>
+									</u-col>
+								</u-row>
+								<u-row>
+									<u-col span="12">
+										<u--text :text="item.content"></u--text>
+									</u-col>
+								</u-row>
+							</view>
+
+
 						</u-col>
 					</u-row>
 				</view>
