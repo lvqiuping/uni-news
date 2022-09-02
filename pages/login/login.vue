@@ -16,24 +16,32 @@
 		<!-- 弹框询问电话 -->
 		<phone-file :showPop="userInfo && !userInfo.phone" :detail-id="detailId"></phone-file>
 		<u-popup :show="showAsk" mode="center" :round="10">
-			<view style="width: 500rpx; height: 500rpx; text-align: center;">
-				<image src="../../static/imgs/logo.png" style="width: 180rpx; height: 150rpx; margin: 30rpx 0 20rpx 0">
-				</image>
-				<view style="margin: 0 40rpx 40rpx 40rpx">
-					<u--text text="为了提供更多的详情,小程序需要您的微信昵称, 头像授权" align="left" size="12" color="rgb(121,121,121)">
-					</u--text>
+			<view style="position: relative; width: 500rpx; height: 500rpx; text-align: center;background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;" :style="{backgroundImage:`url(${images})`} ">
+				<view style="position: absolute; bottom: 10%;">
+					<u-row justify="center">
+						<u-col :span="10">
+							<view style="margin: 0 40rpx 40rpx 40rpx">
+								<u--text text="为了提供更多的详情,小程序需要您的微信昵称, 头像授权" align="left" size="12"
+									color="rgb(121,121,121)">
+								</u--text>
+							</view>
+							<u-row justify="around">
+								<u-col span="4">
+									<u-button type="primary" :plain="true" size="small" shape="circle" text="拒绝"
+										@click="showAsk=false">
+									</u-button>
+								</u-col>
+								<u-col span="4">
+									<u-button type="primary" size="small" shape="circle" text="允许"
+										@click="wechatLogin()">
+									</u-button>
+								</u-col>
+							</u-row>
+						</u-col>
+					</u-row>
 				</view>
-				<u-row gutter="20" customStyle="margin-left: 20%">
-					<u-col span="4">
-						<u-button type="primary" :plain="true" size="small" shape="circle" text="拒绝"
-							@click="showAsk=false">
-						</u-button>
-					</u-col>
-					<u-col span="4">
-						<u-button type="primary" size="small" shape="circle" text="允许" @click="wechatLogin()">
-						</u-button>
-					</u-col>
-				</u-row>
 			</view>
 		</u-popup>
 	</view>
@@ -53,7 +61,8 @@
 				detailId: 0,
 				timer: null,
 				userInfo: null,
-				showAsk: false
+				showAsk: false,
+				images: require('@/static/imgs/tk.png')
 			}
 		},
 		onLoad(option) {
@@ -97,7 +106,6 @@
 												that.loading = false;
 												return that.$toast(result.msg)
 											}
-											console.log(result)
 											uni.setStorageSync('userInfo', result.data)
 											// 成功后跳转,扫码进来和好友从分享进来
 											that.userInfo = result.data

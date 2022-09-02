@@ -201,7 +201,6 @@
 			}
 		},
 		onLoad(option) {
-			console.log('option', option)
 			var that = this;
 			this.isShare = option.isShare
 			// 如果没有登录,就登录, 分享进来的话option.id存在要传给登录页
