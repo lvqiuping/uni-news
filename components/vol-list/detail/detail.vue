@@ -193,19 +193,12 @@
 		},
 		// 分享到朋友圈，加上这个上面微信自带的按钮才会能选择
 		onShareTimeline: function() {
-			var that = this
+			var that = this.newsInfo.title
 			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.$store.state.userInfo.openid
-<<<<<<< HEAD
 			return {
 				title: this.newsInfo.title,
 				query: testQuery
 			}
-=======
-			// return {
-			// 	title: '小程序',
-			// 	query: testQuery
-			// }
->>>>>>> 19f9257f9ed8e849a47d8440b97d326078871f2e
 		},
 		onLoad(option) {
 			console.log('option', option)
