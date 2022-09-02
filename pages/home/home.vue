@@ -59,6 +59,7 @@
 	export default {
 		components: {
 			'message-list': messagelist
+
 		},
 		data() {
 			return {

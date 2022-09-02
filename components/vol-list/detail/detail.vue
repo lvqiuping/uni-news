@@ -6,12 +6,12 @@
 					<u--text size="18" :text="newsInfo.title" bold></u--text>
 				</view>
 				<view>
-					<u-row gutter="10" justify="space-between">
-						<u-col span="4">
-							<u--text type="success" size="12" :text="appName"></u--text>
+					<u-row gutter="10">
+						<u-col span="2">
+							<u--text type="error" size="12" :text="appName"></u--text>
 						</u-col>
-						<u-col span="8">
-							<u--text type="info" size="12" align="right" :text="newsInfo.create_time"></u--text>
+						<u-col span="10">
+							<u--text type="info" size="12" align="left" :text="newsInfo.create_time"></u--text>
 						</u-col>
 					</u-row>
 				</view>
@@ -22,60 +22,55 @@
 				</view>
 				<u-row gutter="10">
 					<u-col span="5">
-						<u-row gutter="10">
-							<u-col textAlign="center" align="center" span="4" v-for="(item, index) in iconList"
-								:key="index" @click="gridClick(item.value, index, item.name)">
-								<view style="height: 44px;">
-									<button :open-type="item.openType" class="u-reset-button"
-										style="width: 56px; height: 44px; background: transparent; border: none">
-										<u-icon :color="item.color" size="20" :name="item.icon"></u-icon>
-										<u--text type="info" size="12" :text="item.name"></u--text>
-									</button>
-								</view>
+						<u-row>
+							<u-col span="4" v-for="(item, index) in iconList" :key="index"
+								@click="gridClick(item.value, index, item.name)">
+								<button :open-type="item.openType"
+									style="width: 56px; height: 44px; background: transparent; border: none">
+									<u-icon :color="item.color" size="20" :name="item.icon"></u-icon>
+									<u--text type="info" size="12" :text="item.name"></u--text>
+								</button>
 							</u-col>
 						</u-row>
 					</u-col>
 					<u-col span="4" offset="3" textAlign="right" justify="end">
-						<view style="height: 44px;">
-							<button class="u-reset-button"
-								style="width: 56px; height: 44px; background: transparent; border: none">
-								<u-icon size="20" name="eye" color="#909399"></u-icon>
-								<u--text type="info" size="12" :text="newsInfo.read_count" margin="0 0 0 10rpx">
-								</u--text>
-							</button>
-						</view>
+						<u--text type="info" size="12" :text="'阅读 ' + newsInfo.read_count" margin="25px 0 0 0"
+							align="right">
+						</u--text>
 					</u-col>
 				</u-row>
 			</view>
 
-			<view style="padding: 40rpx;">
-				<view style="margin-bottom: 50rpx;">
+			<view style="padding: 30rpx;">
+				<view style="margin-bottom: 50rpx; padding: 0 20rpx 0 0">
 					<u-row gutter="10">
 						<u-col span="4">
-							<u--text type="info" text="精选留言"></u--text>
+							<u--text text="精选留言"></u--text>
 						</u-col>
 						<u-col span="4" offset="4" textAlign="right">
-							<u--text :color="commentsColor" text="写留言" align="right" @click="getComment"></u--text>
+							<u--text text="写留言" align="right" @click="getComment">
+							</u--text>
 						</u-col>
 					</u-row>
 				</view>
-				<view v-for="(item, index) in commentList" :key="index" style="margin-bottom: 30rpx;">
-					<u-row align="top">
-						<u-col span="2">
-							<view style="padding: 0 20rpx">
-								<u-avatar :src="item.user.header_img" shape="square" size="30">
+				<view v-for="(item, index) in commentList" :key="index" style="margin-bottom: 15rpx;">
+					<u-row align="top" justify="space-between" gutter="40">
+						<u-col span="1">
+							<view style="padding: 15rpx 0">
+								<u-avatar :src="item.user.header_img" shape="circle" size="30">
 								</u-avatar>
 							</view>
 						</u-col>
-						<u-col span="10">
+						<u-col span="11">
 							<u-row>
 								<u-col span="9">
-									<u--text :color="commentsColor" :text="item.user.nickname"></u--text>
+									<u--text type="info" :text="item.user.nickname"></u--text>
 								</u-col>
-								<u-col span="3" textAlign="right">
+								<u-col span="2">
 									<view style="display: flex;" @click="support(item.id)">
-										<u--text :color="commentsColor" :text="item.support" prefixIcon="thumb-up"
-											align="right" :iconStyle="{ fontSize: '20px', color: commentsColor }">
+										<u--text :color="item.support === 0? '#333' : commentsColor"
+											:text="item.support" prefixIcon="thumb-up" align="right"
+											:iconStyle="item.support === 0 ? 'color: #333': 'color: red'">
 										</u--text>
 									</view>
 								</u-col>
@@ -172,7 +167,7 @@
 				},
 				userInfo: null,
 				isShare: false,
-				commentsColor: '#2b85e4'
+				commentsColor: '#FC5C5B'
 			}
 		},
 		// 分享给朋友
@@ -292,6 +287,7 @@
 				that.http.get("/NewsComments/index", params).then(result => {
 					result.data.color = "#333"
 					that.commentList = result.data;
+					console.log('commentList', that.commentList)
 					that.loading = false;
 				})
 			},

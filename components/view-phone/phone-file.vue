@@ -1,30 +1,25 @@
 <template>
 	<view>
 		<u-popup :show="getShowPop" mode="center" :round="10">
-			<!-- 	<view style="width: 500rpx; height: 500rpx; text-align: center;">
+			<view style="width: 500rpx; height: 500rpx; text-align: center;">
 				<image src="../../static/imgs/logo.png" style="width: 180rpx; height: 150rpx; margin: 30rpx 0 20rpx 0">
 				</image>
-				<view style="margin: 0 40rpx">
+				<view style="margin: 0 40rpx 40rpx 40rpx">
 					<u--text text="为了提供更多的详情,小程序需要您的手机号授权" align="left" size="12" color="rgb(121,121,121)">
 					</u--text>
 				</view>
-				<u-row style="display: flex;">
+				<u-row gutter="20" customStyle="margin-left: 20%">
 					<u-col span="4">
-						<u-button type="primary" :plain="true" size="small" shape="circle" text="确定"></u-button>
-						<button class="" style="" @click="cancelGetPhone">
-							拒绝
-						</button>
+						<u-button type="primary" :plain="true" size="small" shape="circle" text="拒绝"
+							@click="cancelGetPhone"></u-button>
 					</u-col>
 					<u-col span="4">
-						<u-button type="primary" size="small" shape="circle" text="确定"></u-button>
-						<button openType="getPhoneNumber" @getphonenumber="getPhoneNumber" @click="getPhone" class=""
-							style="">
-							允许
-						</button>
+						<u-button type="primary" size="small" shape="circle" text="允许" openType="getPhoneNumber"
+							@getphonenumber="getPhoneNumber" @click="getPhone"></u-button>
 					</u-col>
 				</u-row>
-			</view> -->
-			<view class="slot-boxs" style="position: relative">
+			</view>
+			<!-- 	<view class="slot-boxs" style="position: relative">
 				<view>
 					<u--text text="提示" size="18" align="center" margin="30rpx 0 40rpx" bold></u--text>
 				</view>
@@ -49,7 +44,7 @@
 						</u-col>
 					</u-row>
 				</view>
-			</view>
+			</view> -->
 		</u-popup>
 	</view>
 </template>
@@ -75,11 +70,11 @@
 				return this.showPop
 			}
 		},
-		data() {
-			return {
-				getShowPop2: true
-			}
-		},
+		// data() {
+		// 	return {
+		// 		getShowPop: true
+		// 	}
+		// },
 		methods: {
 			getPhoneNumber(e) {
 				if (e.detail.errMsg === 'getPhoneNumber:ok') {
@@ -91,7 +86,6 @@
 							userInfo.phone = res.data.phoneNumber
 							uni.setStorageSync('userInfo', userInfo)
 							this.userInfo = userInfo
-
 							uni.reLaunch({
 								url: '/components/vol-list/detail/detail?id=' + this.detailId
 							})

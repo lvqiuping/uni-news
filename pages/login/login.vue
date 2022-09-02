@@ -15,6 +15,27 @@
 		</u-row>
 		<!-- 弹框询问电话 -->
 		<phone-file :showPop="userInfo && !userInfo.phone" :detail-id="detailId"></phone-file>
+		<u-popup :show="showAsk" mode="center" :round="10">
+			<view style="width: 500rpx; height: 500rpx; text-align: center;">
+				<image src="../../static/imgs/logo.png" style="width: 180rpx; height: 150rpx; margin: 30rpx 0 20rpx 0">
+				</image>
+				<view style="margin: 0 40rpx 40rpx 40rpx">
+					<u--text text="为了提供更多的详情,小程序需要您的微信昵称, 头像授权" align="left" size="12" color="rgb(121,121,121)">
+					</u--text>
+				</view>
+				<u-row gutter="20" customStyle="margin-left: 20%">
+					<u-col span="4">
+						<u-button type="primary" :plain="true" size="small" shape="circle" text="拒绝"
+							@click="showAsk=false">
+						</u-button>
+					</u-col>
+					<u-col span="4">
+						<u-button type="primary" size="small" shape="circle" text="允许" @click="wechatLogin()">
+						</u-button>
+					</u-col>
+				</u-row>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -31,27 +52,16 @@
 				dataParams: {},
 				detailId: 0,
 				timer: null,
-				userInfo: null
+				userInfo: null,
+				showAsk: false
 			}
 		},
 		onLoad(option) {
 			var that = this
 			that.detailId = option.id
 			that.timer = setTimeout(function() {
-				uni.showModal({
-					title: '提示',
-					content: '为了提供更多的详情,小程序需要您的微信昵称, 头像授权',
-					confirmText: '允许',
-					cancelText: '拒绝',
-					success: (res) => {
-						if (res.confirm) {
-							that.wechatLogin()
-						} else if (res.cancel) {}
-					},
-
-				})
+				that.showAsk = true
 			}, 3000)
-			that.timer
 			// #ifdef MP-WEIXIN
 			this.icons = ['https://img.yzcdn.cn/vant/share-icon-wechat.png']
 			return
@@ -65,6 +75,7 @@
 			wechatLogin() {
 				var that = this
 				clearTimeout(that.timer)
+				that.showAsk = false
 				uni.getUserProfile({ // 调起微信询问是否登录，拿到用户信息
 					desc: '用于完善会员信息',
 					lang: 'zh_CN',
@@ -79,12 +90,14 @@
 									}
 									that.http.post("/User/login", params, true)
 										.then((result) => {
+											that.showAsk = false
 											that.loading = false;
 
 											if (result.code != 1) {
 												that.loading = false;
 												return that.$toast(result.msg)
 											}
+											console.log(result)
 											uni.setStorageSync('userInfo', result.data)
 											// 成功后跳转,扫码进来和好友从分享进来
 											that.userInfo = result.data
