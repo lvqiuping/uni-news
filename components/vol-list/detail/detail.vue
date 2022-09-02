@@ -42,7 +42,7 @@
 			</view>
 
 			<view style="padding: 30rpx;">
-				<view style="margin-bottom: 50rpx; padding: 0 20rpx 0 0">
+				<view style="margin-bottom: 50rpx;">
 					<u-row gutter="10">
 						<u-col span="4">
 							<u--text text="精选留言"></u--text>
@@ -53,7 +53,7 @@
 						</u-col>
 					</u-row>
 				</view>
-				<view v-for="(item, index) in commentList" :key="index" style="margin-bottom: 15rpx;">
+				<view v-for="(item, index) in commentList" :key="index" style="margin-bottom: 20rpx;">
 					<u-row align="top" justify="space-between">
 						<u-col span="1">
 							<view>
@@ -64,7 +64,7 @@
 						<u-col span="11">
 							<view style="padding-left: 20rpx;">
 								<u-row>
-									<u-col span="9">
+									<u-col span="10">
 										<u--text type="info" :text="item.user.nickname"></u--text>
 									</u-col>
 									<u-col span="2">
@@ -82,8 +82,6 @@
 									</u-col>
 								</u-row>
 							</view>
-
-
 						</u-col>
 					</u-row>
 				</view>
@@ -108,8 +106,8 @@
 						<u-row justify="center">
 							<u-col span="10" justify="center">
 								<u-textarea v-model="comment.content" :focus="focus" placeholder="请输入内容"
-									cursorSpacing="120" @confirm="submit" @focus="getFocus"
-									@keyboardheightchange="keyboardHeightChange" maxlength="-1" :showConfirmBar="false">
+									cursorSpacing="70" @confirm="submit" @focus="getFocus"
+									@keyboardheightchange="keyboardHeightChange" maxlength="-1">
 								</u-textarea>
 							</u-col>
 						</u-row>
@@ -302,15 +300,13 @@
 				})
 			},
 			submit(e) {
-				console.log(e)
+				that.addComment = false
 				var that = this
 				let params = {
 					news_id: that.newsInfo.id,
 					content: that.comment.content
 				}
-				console.log(params)
 				that.http.post("/NewsComments/save", params).then(res => {
-					that.addComment = false
 					that.getList()
 				});
 			},
