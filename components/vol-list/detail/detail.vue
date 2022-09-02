@@ -92,8 +92,9 @@
 
 			<view style="height: 20rpx;"></view>
 			<!-- 弹框留言 -->
-			<u-popup :show="addComment" mode="bottom" @close="close" @open="open">
-				<view style="background-color: #f3f4f6; padding: 30rpx;">
+			<u-popup :show="addComment" mode="bottom" @close="close" @open="open" closeOnClickOverlay="false"
+				duration="0">
+				<view style="background-color: #f3f4f6; padding: 30rpx 30rpx 50rpx;">
 					<view style="margin-bottom: 30rpx;">
 						<u-row>
 							<u-col span="6">
@@ -107,10 +108,10 @@
 					<view>
 						<u-row justify="center">
 							<u-col span="10" justify="center">
-								<u--textarea v-model="comment.content" placeholder="请输入内容" @confirm="submit"
-									@focus="getFocus($)" @keyboardheightchange="keyboardHeightChange"
-									:focus="addComment" :showConfirmBar="false">
-								</u--textarea>
+								<u-textarea v-model="comment.content" :focus="focus" placeholder="请输入内容"
+									cursorSpacing="120" @confirm="submit" @focus="getFocus"
+									@keyboardheightchange="keyboardHeightChange" maxlength="-1" :showConfirmBar="false">
+								</u-textarea>
 							</u-col>
 						</u-row>
 					</view>
@@ -172,7 +173,9 @@
 				},
 				userInfo: null,
 				isShare: false,
-				commentsColor: '#2b85e4'
+				commentsColor: '#2b85e4',
+				cursorSpacing: 0,
+				focus: false
 			}
 		},
 		// 分享给朋友
@@ -244,6 +247,7 @@
 			},
 			keyboardHeightChange(e) {
 				console.log('keyboardHeightChange', e)
+				this.cursorSpacing = e.detail.height
 			},
 			getComment() {
 				this.addComment = true
@@ -253,10 +257,12 @@
 			},
 			open() {
 				// console.log('open');
+				this.focus = true
 			},
 			close() {
 				this.show = false
 				this.addComment = false
+				this.focus = false
 			},
 			support(id) {
 				var that = this
@@ -293,12 +299,14 @@
 					that.loading = false;
 				})
 			},
-			submit() {
+			submit(e) {
+				console.log(e)
 				var that = this
 				let params = {
 					news_id: that.newsInfo.id,
 					content: that.comment.content
 				}
+				console.log(params)
 				that.http.post("/NewsComments/save", params).then(res => {
 					that.addComment = false
 					that.getList()
