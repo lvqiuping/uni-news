@@ -182,13 +182,8 @@
 			var that = this
 			// must return custom share data when user share.
 			return {
-<<<<<<< HEAD
 				title: that.newsInfo.title,
-				path: '/components/vol-list/detail/detail?id=' + that.newsInfo.id + '&openid=' + that.newsInfo.openid,
-=======
-				title: this.newsInfo.title,
-				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.userInfo.openid,
->>>>>>> aa09f3485e3882c80684c546e9c362acfe671277
+				path: '/components/vol-list/detail/detail?id=' + that.newsInfo.id + '&openid=' + that.userInfo.openid,
 				success(res) {
 					console.log('分享成功', res)
 				},
@@ -200,17 +195,11 @@
 		},
 		// 分享到朋友圈，加上这个上面微信自带的按钮才会能选择
 		onShareTimeline: function() {
-<<<<<<< HEAD
 			var that = this
 			var query = {
 				id: that.newsInfo.id,
-				openid: that.newsInfo.openid
+				openid: that.userInfo.openid
 			}
-			// console.log('分享朋友圈', query)
-=======
-			var that = this.newsInfo.title
-			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.userInfo.openid
->>>>>>> aa09f3485e3882c80684c546e9c362acfe671277
 			return {
 				title: that.newsInfo.title,
 				query: query
@@ -226,18 +215,10 @@
 		},
 		onShow() {
 			var that = this;
-<<<<<<< HEAD
 			that.userInfo = uni.getStorageSync('userInfo')
-			that.newsInfo.openid = that.userInfo.openid
 			if (!that.userInfo) {
-				uni.navigateTo({
-					url: '/pages/login/login?id=' + that.newsInfo.id
-=======
-			this.userInfo = uni.getStorageSync('userInfo')
-			if (!this.userInfo) {
 				uni.redirectTo({
-					url: '/pages/login/login?id=' + this.newsInfo.id
->>>>>>> aa09f3485e3882c80684c546e9c362acfe671277
+					url: '/pages/login/login?id=' + that.newsInfo.id
 				})
 			} else {
 				let params = {
@@ -253,7 +234,7 @@
 					})
 				})
 				that.getList();
-				this.startViewTime = Date.now()
+				that.startViewTime = Date.now()
 			}
 		},
 		onUnload() {
