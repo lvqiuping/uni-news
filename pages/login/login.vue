@@ -29,13 +29,12 @@
 							</view>
 							<u-row justify="around">
 								<u-col span="4">
-									<u-button type="primary" :plain="true" size="small" shape="circle" text="拒绝"
+									<u-button type="primary" size="small" :plain="true" text="拒绝"
 										@click="showAsk=false">
 									</u-button>
 								</u-col>
 								<u-col span="4">
-									<u-button type="primary" size="small" shape="circle" text="允许"
-										@click="wechatLogin()">
+									<u-button type="primary" size="small" text="允许" @click="wechatLogin()">
 									</u-button>
 								</u-col>
 							</u-row>

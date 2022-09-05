@@ -12,13 +12,13 @@
 							</view>
 							<u-row justify="around">
 								<u-col span="4">
-									<u-button type="primary" :plain="true" size="small" shape="circle" text="拒绝"
+									<u-button type="primary" :plain="true" size="small" text="拒绝"
 										@click="cancelGetPhone">
 									</u-button>
 								</u-col>
 								<u-col span="4">
-									<u-button type="primary" size="small" shape="circle" text="允许"
-										openType="getPhoneNumber" @getphonenumber="getPhoneNumber" @click="getPhone">
+									<u-button type="primary" size="small" text="允许" openType="getPhoneNumber"
+										@getphonenumber="getPhoneNumber" @click="getPhone">
 									</u-button>
 								</u-col>
 							</u-row>
