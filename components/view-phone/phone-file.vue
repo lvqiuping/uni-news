@@ -1,9 +1,8 @@
 <template>
 	<view>
 		<u-popup :show="getShowPop" mode="center" :round="10">
-			<view style="position: relative; width: 500rpx; height: 500rpx; text-align: center;background-repeat: no-repeat;
-			background-position: center;
-			background-size: 100%;" :style="{backgroundImage:`url(${images})`} ">
+			<view style="position: relative; width: 500rpx; height: 500rpx; text-align: center;">
+				<image style="width: 100%; height: 50%;" src="@/static/imgs/tk.png"></image>
 				<view style="position: absolute; bottom: 10%;">
 					<u-row justify="center">
 						<u-col :span="10">
@@ -53,10 +52,7 @@
 			}
 		},
 		data() {
-			return {
-				// getShowPop: true
-				images: require('@/static/imgs/tk.png')
-			}
+			return {}
 		},
 		methods: {
 			getPhoneNumber(e) {

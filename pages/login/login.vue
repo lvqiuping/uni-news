@@ -15,10 +15,10 @@
 		</u-row>
 		<!-- 弹框询问电话 -->
 		<phone-file :showPop="userInfo && !userInfo.phone" :detail-id="detailId"></phone-file>
+		<!-- 弹框询问微信昵称, 头像授权 -->
 		<u-popup :show="showAsk" mode="center" :round="10">
-			<view style="position: relative; width: 500rpx; height: 500rpx; text-align: center;background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100%;" :style="{backgroundImage:`url(${images})`} ">
+			<view style="position: relative; width: 500rpx; height: 500rpx; text-align: center;">
+				<image style="width: 100%; height: 50%;" src="@/static/imgs/tk.png"></image>
 				<view style="position: absolute; bottom: 10%;">
 					<u-row justify="center">
 						<u-col :span="10">
@@ -61,8 +61,7 @@
 				detailId: 0,
 				timer: null,
 				userInfo: null,
-				showAsk: false,
-				images: require('@/static/imgs/tk.png')
+				showAsk: false
 			}
 		},
 		onLoad(option) {

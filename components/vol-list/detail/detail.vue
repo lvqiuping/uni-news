@@ -177,11 +177,11 @@
 		},
 		// 分享给朋友
 		onShareAppMessage: function(options) {
+			var that = this
 			// must return custom share data when user share.
 			return {
-				title: this.newsInfo.title,
-				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.$store.state
-					.userInfo.openid,
+				title: that.newsInfo.title,
+				path: '/components/vol-list/detail/detail?id=' + that.newsInfo.id + '&openid=' + that.newsInfo.openid,
 				success(res) {
 					console.log('分享成功', res)
 				},
@@ -193,27 +193,32 @@
 		},
 		// 分享到朋友圈，加上这个上面微信自带的按钮才会能选择
 		onShareTimeline: function() {
-			var that = this.newsInfo.title
-			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.$store.state.userInfo.openid
+			var that = this
+			var query = {
+				id: that.newsInfo.id,
+				openid: that.newsInfo.openid
+			}
+			// console.log('分享朋友圈', query)
 			return {
-				title: this.newsInfo.title,
-				query: testQuery
+				title: that.newsInfo.title,
+				query: query
 			}
 		},
 		onLoad(option) {
 			var that = this;
-			this.isShare = option.isShare
+			that.isShare = option.isShare
 			// 如果没有登录,就登录, 分享进来的话option.id存在要传给登录页
-			this.appName = app.globalData.appName
+			that.appName = app.globalData.appName
 			that.newsInfo.id = option.id
 			that.newsInfo.title = option.title
 		},
 		onShow() {
 			var that = this;
-			this.userInfo = uni.getStorageSync('userInfo')
-			if (!this.userInfo) {
+			that.userInfo = uni.getStorageSync('userInfo')
+			that.newsInfo.openid = that.userInfo.openid
+			if (!that.userInfo) {
 				uni.navigateTo({
-					url: '/pages/login/login?id=' + this.newsInfo.id
+					url: '/pages/login/login?id=' + that.newsInfo.id
 				})
 			} else {
 				let params = {
@@ -221,7 +226,7 @@
 				}
 				// 初始化新闻内容
 				that.http.get("/News/read", params).then(result => {
-					result.data.content = this.unescapeEntity(result.data.content)
+					result.data.content = that.unescapeEntity(result.data.content)
 					that.newsInfo = Object.assign({}, that.newsInfo, result.data);
 					that.loading = false;
 					uni.setNavigationBarTitle({
@@ -254,7 +259,6 @@
 				}
 			},
 			open() {
-				// console.log('open');
 				this.focus = true
 			},
 			close() {
@@ -294,7 +298,6 @@
 				that.http.get("/NewsComments/index", params).then(result => {
 					result.data.color = "#333"
 					that.commentList = result.data;
-					console.log('commentList', that.commentList)
 					that.loading = false;
 				})
 			},

@@ -48,13 +48,11 @@
 				</view>
 			</u-col>
 		</u-row>
-		<!-- <phone-file :show="show"></phone-file> -->
 	</view>
 </template>
 
 <script>
 	import messagelist from '@/components/vol-list/message-list.vue'
-	// import PhoneFile from '@/components/view-phone/phone-file.vue' 'phone-file': PhoneFile
 	const app = getApp()
 	export default {
 		components: {
@@ -66,7 +64,7 @@
 				show: true,
 				swiperList: [
 					'/static/imgs/swiper1.jpg',
-					'/static/imgs/swiper1.jpg'
+					'/static/imgs/swiper2.jpg'
 				],
 				tabsTitle: [],
 				list: [],
