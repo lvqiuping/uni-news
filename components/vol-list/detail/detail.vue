@@ -172,7 +172,9 @@
 				isShare: false,
 				commentsColor: '#FC5C5B',
 				cursorSpacing: 0,
-				focus: false
+				focus: false,
+				startViewTime: 0,
+				endViewTime: 0
 			}
 		},
 		// 分享给朋友
@@ -180,8 +182,7 @@
 			// must return custom share data when user share.
 			return {
 				title: this.newsInfo.title,
-				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.$store.state
-					.userInfo.openid,
+				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.userInfo.openid,
 				success(res) {
 					console.log('分享成功', res)
 				},
@@ -194,7 +195,7 @@
 		// 分享到朋友圈，加上这个上面微信自带的按钮才会能选择
 		onShareTimeline: function() {
 			var that = this.newsInfo.title
-			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.$store.state.userInfo.openid
+			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.userInfo.openid
 			return {
 				title: this.newsInfo.title,
 				query: testQuery
@@ -212,7 +213,7 @@
 			var that = this;
 			this.userInfo = uni.getStorageSync('userInfo')
 			if (!this.userInfo) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '/pages/login/login?id=' + this.newsInfo.id
 				})
 			} else {
@@ -229,10 +230,19 @@
 					})
 				})
 				that.getList();
-				that.gridClick('read_count'); // 进入页面就加一次阅读量
+				this.startViewTime = Date.now()
 			}
 		},
 		onUnload() {
+			// 保存浏览历史记录
+			if (this.startViewTime > 0) {
+				this.endViewTime = Date.now()
+				this.http.post('/News/setViewHistory', {
+					id: this.newsInfo.id,
+					view_time: this.endViewTime - this.startViewTime
+				})
+			}
+
 			if (this.isShare) {
 				uni.redirectTo({
 					url: '/pages/home/home'
