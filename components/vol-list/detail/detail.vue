@@ -172,7 +172,9 @@
 				isShare: false,
 				commentsColor: '#FC5C5B',
 				cursorSpacing: 0,
-				focus: false
+				focus: false,
+				startViewTime: 0,
+				endViewTime: 0
 			}
 		},
 		// 分享给朋友
@@ -180,8 +182,13 @@
 			var that = this
 			// must return custom share data when user share.
 			return {
+<<<<<<< HEAD
 				title: that.newsInfo.title,
 				path: '/components/vol-list/detail/detail?id=' + that.newsInfo.id + '&openid=' + that.newsInfo.openid,
+=======
+				title: this.newsInfo.title,
+				path: '/components/vol-list/detail/detail?id=' + this.newsInfo.id + '&openid=' + this.userInfo.openid,
+>>>>>>> aa09f3485e3882c80684c546e9c362acfe671277
 				success(res) {
 					console.log('分享成功', res)
 				},
@@ -193,12 +200,17 @@
 		},
 		// 分享到朋友圈，加上这个上面微信自带的按钮才会能选择
 		onShareTimeline: function() {
+<<<<<<< HEAD
 			var that = this
 			var query = {
 				id: that.newsInfo.id,
 				openid: that.newsInfo.openid
 			}
 			// console.log('分享朋友圈', query)
+=======
+			var that = this.newsInfo.title
+			var testQuery = `id=` + that.newsInfo.id + '&openid=' + that.userInfo.openid
+>>>>>>> aa09f3485e3882c80684c546e9c362acfe671277
 			return {
 				title: that.newsInfo.title,
 				query: query
@@ -214,11 +226,18 @@
 		},
 		onShow() {
 			var that = this;
+<<<<<<< HEAD
 			that.userInfo = uni.getStorageSync('userInfo')
 			that.newsInfo.openid = that.userInfo.openid
 			if (!that.userInfo) {
 				uni.navigateTo({
 					url: '/pages/login/login?id=' + that.newsInfo.id
+=======
+			this.userInfo = uni.getStorageSync('userInfo')
+			if (!this.userInfo) {
+				uni.redirectTo({
+					url: '/pages/login/login?id=' + this.newsInfo.id
+>>>>>>> aa09f3485e3882c80684c546e9c362acfe671277
 				})
 			} else {
 				let params = {
@@ -234,10 +253,19 @@
 					})
 				})
 				that.getList();
-				that.gridClick('read_count'); // 进入页面就加一次阅读量
+				this.startViewTime = Date.now()
 			}
 		},
 		onUnload() {
+			// 保存浏览历史记录
+			if (this.startViewTime > 0) {
+				this.endViewTime = Date.now()
+				this.http.post('/News/setViewHistory', {
+					id: this.newsInfo.id,
+					view_time: this.endViewTime - this.startViewTime
+				})
+			}
+
 			if (this.isShare) {
 				uni.redirectTo({
 					url: '/pages/home/home'
