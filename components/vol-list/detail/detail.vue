@@ -212,30 +212,28 @@
 			that.appName = app.globalData.appName
 			that.newsInfo.id = option.id
 			that.newsInfo.title = option.title
-		},
-		onShow() {
-			var that = this;
 			that.userInfo = uni.getStorageSync('userInfo')
 			if (!that.userInfo) {
 				uni.redirectTo({
 					url: '/pages/login/login?id=' + that.newsInfo.id
 				})
-			} else {
-				let params = {
-					id: that.newsInfo.id
-				}
-				// 初始化新闻内容
-				that.http.get("/News/read", params).then(result => {
-					result.data.content = that.unescapeEntity(result.data.content)
-					that.newsInfo = Object.assign({}, that.newsInfo, result.data);
-					that.loading = false;
-					uni.setNavigationBarTitle({
-						title: result.data.title
-					})
-				})
-				that.getList();
-				that.startViewTime = Date.now()
 			}
+		},
+		onReady() {
+			var that = this;
+			// 初始化新闻内容
+			that.http.get("/News/read", {
+				id: that.newsInfo.id
+			}).then(result => {
+				result.data.content = that.unescapeEntity(result.data.content)
+				that.newsInfo = Object.assign({}, that.newsInfo, result.data);
+				that.loading = false;
+				uni.setNavigationBarTitle({
+					title: result.data.title
+				})
+			})
+			that.getList();
+			that.startViewTime = Date.now()
 		},
 		onUnload() {
 			// 保存浏览历史记录

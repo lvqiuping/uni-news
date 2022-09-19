@@ -34,8 +34,7 @@
 		{
 			"path": "components/vol-list/search-list/search-list",
 			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": true
+				"navigationBarTitleText": ""
 			}
 
 		},
@@ -97,9 +96,10 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "蚁讯云",
 		"navigationBarBackgroundColor": "#00aaff",
-		"navigationBarTextStyle": "white",
+		// "navigationBarTextStyle": "white",
 		"backgroundColor": "#FFFFFF",
-		"onReachBottomDistance": 50
+		"onReachBottomDistance": 50,
+		"enablePullDownRefresh": true
 	},
 	"easycom": {
 		"autoscan": true,
