@@ -64,7 +64,7 @@
 				show: true,
 				swiperList: [
 					'/static/imgs/swiper1.jpg',
-					'/static/imgs/swiper2.jpg'
+					'/static/imgs/swiper1.jpg'
 				],
 				tabsTitle: [],
 				list: [],

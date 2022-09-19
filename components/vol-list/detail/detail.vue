@@ -311,8 +311,8 @@
 				})
 			},
 			submit(e) {
-				that.addComment = false
 				var that = this
+				that.addComment = false
 				let params = {
 					news_id: that.newsInfo.id,
 					content: that.comment.content
