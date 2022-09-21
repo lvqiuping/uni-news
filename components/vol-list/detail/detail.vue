@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<view v-show="userInfo && userInfo.phone">
+		<view v-show="!showPhonePop">
 			<view style="padding: 40rpx;">
 				<view style="margin-bottom: 40rpx;">
 					<u--text size="18" :text="newsInfo.title" bold></u--text>
@@ -115,11 +115,11 @@
 				</view>
 			</u-popup>
 		</view>
-		<view v-show="userInfo && !userInfo.phone">
+		<view v-show="showPhonePop">
 			<u--text text="无权限查看" type="info"></u--text>
 		</view>
 		<!-- 弹框询问电话 -->
-		<phone-file :showPop="userInfo && !userInfo.phone" :detail-id="newsInfo.id"></phone-file>
+		<phone-file v-if="showPhonePop" :showPop="showPhonePop" :detail-id="newsInfo.id"></phone-file>
 	</view>
 </template>
 
@@ -175,6 +175,11 @@
 				focus: false,
 				startViewTime: 0,
 				endViewTime: 0
+			}
+		},
+		computed: {
+			showPhonePop() {
+				return !!this.userInfo && !this.userInfo?.phone
 			}
 		},
 		// 分享给朋友

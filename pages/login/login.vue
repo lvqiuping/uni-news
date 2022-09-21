@@ -14,7 +14,7 @@
 			</u-col>
 		</u-row>
 		<!-- 弹框询问电话 -->
-		<phone-file :showPop="userInfo && !userInfo.phone" :detail-id="detailId"></phone-file>
+		<phone-file v-if="showPhonePop" :showPop="showPhonePop" :detail-id="detailId"></phone-file>
 		<!-- 弹框询问微信昵称, 头像授权 -->
 		<u-popup :show="showAsk" mode="center" :round="10">
 			<view style="position: relative; width: 500rpx; height: 500rpx; text-align: center;">
@@ -63,6 +63,11 @@
 				showAsk: false
 			}
 		},
+		computed: {
+			showPhonePop() {
+				return this.userInfo !== null && !this.userInfo.phone
+			}
+		},
 		onLoad(option) {
 			var that = this
 			that.detailId = option.id
@@ -87,20 +92,19 @@
 					desc: '用于完善会员信息',
 					lang: 'zh_CN',
 					success: res => {
-						if (res) {
+						if (res.errMsg === 'getUserProfile:ok') {
 							res.userInfo.news_id = that.detailId
 							wx.login({ // 拿到code
 								success(res2) {
-									let params = {
-										userInfo: res.userInfo,
-										code: res2.code
-									}
-									that.http.post("/User/login", params, true)
-										.then((result) => {
+									if (res2.code) {
+										that.http.post("/User/login", {
+											userInfo: res.userInfo,
+											code: res2.code
+										}, true).then((result) => {
 											that.showAsk = false
 											that.loading = false;
 
-											if (result.code != 1) {
+											if (result.code !== 1) {
 												that.loading = false;
 												return that.$toast(result.msg)
 											}
@@ -121,13 +125,17 @@
 												})
 											}
 										});
+									} else {
+										that.$toast('授权失败');
+									}
 								}
 							})
-
+						} else {
+							that.$toast('授权失败');
 						}
 					},
 					fail: err => {
-						console.log('err', err)
+						that.$toast(err)
 					}
 				})
 			}

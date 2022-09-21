@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-popup :show="getShowPop" mode="center" :round="10">
+		<u-popup :show="show" mode="center" :round="10">
 			<view style="position: relative; width: 500rpx; height: 500rpx; text-align: center;">
 				<image style="width: 100%; height: 50%;" src="@/static/imgs/tk.png"></image>
 				<view style="position: absolute; bottom: 10%;">
@@ -33,50 +33,43 @@
 <script>
 	export default {
 		name: 'PhoneFile',
-		props: {
-			showPop: {
-				type: Boolean,
-				default: false
-			},
-			detailId: {
-				type: Number,
-				default: 0
-			}
-		},
-		onShow(options) {
-			console.log(options)
-		},
-		computed: {
-			getShowPop() {
-				return this.showPop
-			}
-		},
+		props: ['showPop', 'detailId'],
 		data() {
-			return {}
+			return {
+				show: this.showPop
+			}
 		},
 		methods: {
 			getPhoneNumber(e) {
+				const that = this
 				if (e.detail.errMsg === 'getPhoneNumber:ok') {
-					this.http.post('/User/getUserPhoneNumber', {
+					that.http.post('/User/getUserPhoneNumber', {
 						code: e.detail.code
 					}).then(res => {
-						if (res.code === 1) {
-							const userInfo = uni.getStorageSync('userInfo')
-							userInfo.phone = res.data.phoneNumber
-							uni.setStorageSync('userInfo', userInfo)
-							this.userInfo = userInfo
-							uni.reLaunch({
-								url: '/components/vol-list/detail/detail?id=' + this.detailId
+						if (res.code !== 1) {
+							uni.showToast({
+								title: res.msg
 							})
+
+							return false
 						}
+
+
+						const userInfo = uni.getStorageSync('userInfo')
+						userInfo.phone = res.data.phoneNumber
+						uni.setStorageSync('userInfo', userInfo)
+						that.userInfo = userInfo
+						uni.reLaunch({
+							url: '/components/vol-list/detail/detail?id=' + that.detailId
+						})
 					})
 				} else if (e.detail.errMsg === 'getPhoneNumber:fail user deny') {
-					console.log('拒绝获得手机号')
-					this.showPop = true
+					that.show = true
 				}
 			},
 			getPhone() {
-				this.showPop = false
+				this.show = false
+				console.log(this.show)
 			},
 			cancelGetPhone() {
 				uni.reLaunch({
