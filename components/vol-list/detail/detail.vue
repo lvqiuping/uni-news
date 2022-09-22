@@ -211,35 +211,33 @@
 			}
 		},
 		onLoad(option) {
-			var that = this;
-			that.isShare = option.isShare
+			this.isShare = option.isShare
 			// 如果没有登录,就登录, 分享进来的话option.id存在要传给登录页
-			that.appName = app.globalData.appName
-			that.newsInfo.id = option.id
-			that.newsInfo.title = option.title
-			that.userInfo = uni.getStorageSync('userInfo')
-			if (!that.userInfo) {
+			this.appName = app.globalData.appName
+			this.newsInfo.id = option.id
+			this.newsInfo.title = option.title ?? ''
+			this.userInfo = uni.getStorageSync('userInfo')
+			if (!this.userInfo) {
 				uni.redirectTo({
-					url: '/pages/login/login?id=' + that.newsInfo.id
+					url: '/pages/login/login?id=' + this.newsInfo.id
 				})
+			} else {
+				// 初始化新闻内容
+				this.http.get("/News/read", {
+					id: this.newsInfo.id
+				}).then(result => {
+					result.data.content = this.unescapeEntity(result.data.content)
+					this.newsInfo = Object.assign({}, this.newsInfo, result.data);
+					this.loading = false;
+					uni.setNavigationBarTitle({
+						title: result.data.title
+					})
+				})
+				this.getList()
+				this.startViewTime = Date.now()
 			}
 		},
-		onReady() {
-			var that = this;
-			// 初始化新闻内容
-			that.http.get("/News/read", {
-				id: that.newsInfo.id
-			}).then(result => {
-				result.data.content = that.unescapeEntity(result.data.content)
-				that.newsInfo = Object.assign({}, that.newsInfo, result.data);
-				that.loading = false;
-				uni.setNavigationBarTitle({
-					title: result.data.title
-				})
-			})
-			that.getList();
-			that.startViewTime = Date.now()
-		},
+		onReady() {},
 		onUnload() {
 			// 保存浏览历史记录
 			if (this.startViewTime > 0) {
